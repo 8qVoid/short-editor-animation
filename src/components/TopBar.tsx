@@ -1,6 +1,7 @@
-import { Download, FolderOpen, Monitor, Redo2, Save, Smartphone, Undo2, ZoomIn, ZoomOut } from "lucide-react";
+import { FolderOpen, Monitor, Redo2, Save, Smartphone, Undo2, ZoomIn, ZoomOut } from "lucide-react";
 import { loadAutosave, useEditorStore } from "../store/editorStore";
 import type { Project } from "../types/editor";
+import { ExportButton } from "./ExportButton";
 
 export function TopBar() {
   const { project, saveProjectFile, loadProject, undo, redo, stageScale, stagePosition, setStageView, setCanvasSize } = useEditorStore();
@@ -40,7 +41,7 @@ export function TopBar() {
           const autosave = await loadAutosave();
           if (autosave) loadProject(autosave);
         }}>Load Autosave</button>
-        <button className="ghost"><Download size={17} /> Export Later</button>
+        <ExportButton />
       </nav>
     </header>
   );

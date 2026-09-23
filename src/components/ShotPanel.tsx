@@ -7,7 +7,7 @@ export function ShotPanel() {
   const camera=cameraAt(shot,s.playhead-start+(shot.animationOffset??0));
   return <section className="shot-panel">
     <div className="section-label">Shot camera</div>
-    <label className="field"><span>Camera move</span><select aria-label="Camera move" value="" onChange={e=>s.applyCameraMotion(e.target.value)}><option value="" disabled>Choose camera move</option><option value="push-in">Push in</option><option value="pull-out">Pull out</option><option value="pan-left">Pan left</option><option value="pan-right">Pan right</option><option value="static">Reset camera</option></select></label>
+    <label className="field"><span>Camera move</span><select aria-label="Camera move" value="" onChange={e=>s.applyCameraMotion(e.target.value)}><option value="" disabled>Choose camera move</option><option value="push-in">Push in</option><option value="snap-zoom">Snap zoom</option><option value="pull-out">Pull out</option><option value="pan-left">Pan left</option><option value="pan-right">Pan right</option><option value="follow-left">Follow left</option><option value="follow-right">Follow right</option><option value="shake">Camera shake</option><option value="static">Reset camera</option></select></label>
     <div className="fields">
       {([['x','Pan X'],['y','Pan Y'],['zoom','Zoom'],['rotation','Tilt']] as const).map(([key,label])=><label className="field" key={key}><span>{label}</span><input aria-label={`Camera ${label}`} type="number" step={key==='zoom'?.05:1} min={key==='zoom'?.25:undefined} max={key==='zoom'?4:undefined} value={Number(camera[key].toFixed(3))} onChange={e=>s.updateCamera({[key]:Number(e.target.value)})}/></label>)}
     </div>

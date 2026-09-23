@@ -7,6 +7,7 @@ import type { CharacterAppearance, HairId, OutfitId } from "../types/editor";
 import { objectAt } from "../animation";
 import { MotionPanel } from "./MotionPanel";
 import { ShotPanel } from "./ShotPanel";
+import { ProjectSyncPanel } from "./ProjectSyncPanel";
 
 export function PropertiesPanel() {
   const { project, selectedIds, updateObject, updateObjectTransform, deleteSelected, duplicateSelected } = useEditorStore();
@@ -20,6 +21,7 @@ export function PropertiesPanel() {
     return (
       <aside className="right-panel">
         <div className="panel-title">Properties</div>
+        <ProjectSyncPanel />
         <ShotPanel />
       </aside>
     );
@@ -38,6 +40,7 @@ export function PropertiesPanel() {
   return (
     <aside className="right-panel">
       <div className="panel-title">Properties</div>
+      <ProjectSyncPanel />
       <input className="object-name" aria-label="Layer name" value={object.name} onChange={e=>updateObject(object.id,{name:e.target.value})}/>
       <MotionPanel object={object} />
       {object.kind === "character" && <>

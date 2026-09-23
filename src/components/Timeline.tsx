@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Copy, Plus, Trash2, Play, Pause, Scissors, SkipBack, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from "lucide-react";
+import { Copy, Plus, Trash2, Play, Pause, Scissors, SkipBack, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Drama, Eye, MessageSquare } from "lucide-react";
 import { useEditorStore } from "../store/editorStore";
 import { AudioEditor } from "./AudioEditor";
 import { ObjectTracks } from "./ObjectTracks";
 import { Timer } from "lucide-react";
 
 export function Timeline() {
-  const { project, playhead, playing, seek, setPlaying, splitShot, moveShot, setActiveShot, addShot, duplicateShot, deleteShot, setShotDuration } = useEditorStore();
+  const { project, playhead, playing, seek, setPlaying, splitShot, moveShot, setActiveShot, addShot, duplicateShot, deleteShot, setShotDuration, addStoryBeat } = useEditorStore();
   const [zoom, setZoom] = useState(100);
   const trackRef = useRef<HTMLDivElement>(null);
   const [trim, setTrim] = useState<{ id: string; x: number; duration: number; next: number } | null>(null);
@@ -54,6 +54,9 @@ export function Timeline() {
       <button title="Split at playhead" aria-label="Split at playhead" disabled={!canSplit} onClick={splitShot}><Scissors size={16} /></button>
       <button onClick={addShot}><Plus size={16} /> Add Shot</button>
       <button onClick={()=>useEditorStore.getState().addTimeCard()}><Timer size={16}/>Time Card</button>
+      <button onClick={() => addStoryBeat("awkward")}><Drama size={16} /> Awkward</button>
+      <button onClick={() => addStoryBeat("closeup")}><Eye size={16} /> Close-up</button>
+      <button onClick={() => addStoryBeat("meanwhile")}><MessageSquare size={16} /> Meanwhile</button>
       <button title="Duplicate shot" aria-label="Duplicate shot" onClick={duplicateShot}><Copy size={16} /></button>
       <button title="Delete shot" aria-label="Delete shot" disabled={project.shots.length < 2} onClick={() => deleteShot(active.id)}><Trash2 size={16} /></button>
       <label>Duration<input aria-label="Shot duration" type="number" min={1 / fps} step={1 / fps} value={Number(active.duration.toFixed(3))} onChange={e => setShotDuration(Number(e.target.value))} />s</label>

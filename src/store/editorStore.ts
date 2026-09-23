@@ -80,6 +80,7 @@ interface EditorState {
   updateCamera: (patch: Partial<Camera>) => void;
   applyCameraMotion: (preset: string) => void;
   addTimeCard: () => void;
+  addStoryBeat: (beat: "awkward" | "meanwhile" | "closeup" | "reveal") => void;
   reorderObject: (id: string, direction: number) => void;
   saveError?: string;
   addAudio: (clip: AudioClip) => void;
@@ -210,6 +211,57 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     shots.splice(index+1,0,shot);
     const audioClips=state.project.audioClips?.map(c=>c.start>=insertion?{...c,start:c.start+shot.duration}:c);
     return {...withHistory(state,{...state.project,shots,audioClips,activeShotId:shot.id}),selectedIds:[title.id]};
+  }),
+  addStoryBeat: beat => set(state => {
+    const { width, height } = state.project.canvas;
+    const index = state.project.shots.findIndex(s => s.id === state.project.activeShotId);
+    const source = state.project.shots[index];
+    const background = source.objects.find(o => o.kind === "background");
+    const labels = {
+      awkward: { name: "Awkward Pause", text: "...", duration: 1.4 },
+      meanwhile: { name: "Meanwhile", text: "Meanwhile...", duration: 1.8 },
+      closeup: { name: "Dramatic Close-up", text: "", duration: 1.2 },
+      reveal: { name: "One reveal later", text: "One reveal later...", duration: 1.6 }
+    }[beat];
+    const objects = background ? [{ ...clone(background), id: projectId(), locked: true, layer: 0 }] : [];
+    if (labels.text) objects.push({
+      id: projectId(),
+      assetId: "text-caption",
+      name: labels.text,
+      kind: "text",
+      transform: baseTransform(width * .08, height * .39, width * .84, height * .18),
+      locked: false,
+      hidden: false,
+      layer: 2,
+      text: labels.text
+    });
+    const shot: Shot = {
+      id: projectId(),
+      name: labels.name,
+      duration: labels.duration,
+      camera: { x: 0, y: 0, zoom: 1, rotation: 0 },
+      cameraKeyframes: beat === "closeup"
+        ? cameraKeys(source.camera, "push-in", source.animationOffset ?? 0, (source.animationOffset ?? 0) + labels.duration, width)
+        : undefined,
+      objects: beat === "closeup"
+        ? clone(source.objects).map((o: SceneObject) => ({ ...o, id: projectId() }))
+        : objects
+    };
+    if (beat === "awkward") {
+      shot.objects.push({
+        id: projectId(),
+        assetId: "effect-thought",
+        name: "Awkward silence",
+        kind: "effect",
+        transform: baseTransform(width * .37, height * .32, width * .26, height * .12),
+        locked: false,
+        hidden: false,
+        layer: 3
+      });
+    }
+    const shots = [...state.project.shots];
+    shots.splice(index + 1, 0, shot);
+    return { ...withHistory(state, { ...state.project, shots, activeShotId: shot.id }), selectedIds: [] };
   }),
   addAudio: (clip) => set(state => {
     const shots = [...state.project.shots];

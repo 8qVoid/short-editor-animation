@@ -22,7 +22,7 @@ export function MotionPanel({ object }: { object: SceneObject }) {
     </div>
     {current&&<label className="field"><span>Interpolation</span><select aria-label="Keyframe interpolation" value={current.easing} onChange={e=>s.setKeyEasing(object.id,current.time,e.target.value as Easing)}><option value="smooth">Ease in / out</option><option value="linear">Linear</option><option value="hold">Hold, then cut</option></select></label>}
     <label className="field"><span>Movement preset</span><select aria-label="Movement preset" value="" onChange={e=>{if(e.target.value)s.applyMotion(object.id,e.target.value as MotionPreset);}}>
-      <option value="">Choose movement</option><option value="enter-left">Enter from left</option><option value="enter-right">Enter from right</option><option value="exit-right">Exit to right</option><option value="approach">Move closer</option><option value="recede">Move away</option><option value="hop">Hop</option><option value="clear">Remove movement</option>
+      <option value="">Choose movement</option><option value="enter-left">Enter from left</option><option value="enter-right">Enter from right</option><option value="exit-right">Exit to right</option><option value="approach">Move closer</option><option value="recede">Move away</option><option value="slide-left">Slide left</option><option value="slide-right">Slide right</option><option value="hop">Hop</option><option value="bounce">Bounce</option><option value="shake">Shake</option><option value="fall">Fall down</option><option value="clear">Remove movement</option>
     </select></label>
   </section>;
 }

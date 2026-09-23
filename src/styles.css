@@ -342,6 +342,11 @@ button {
 .audio-toolbar button { min-height: 30px; }
 .audio-toolbar .recording { background: #b52e42; color: white; }
 .audio-error { color: #ad2538; font-size: 12px; }
+.export-error { color: #ad2538; font-size: 12px; align-self: center; }
+.sync-panel { display: grid; gap: 7px; padding: 8px; margin-bottom: 12px; border: 1px solid #d0c8bc; border-radius: 7px; background: #fffdf7; }
+.sync-panel div { display: grid; grid-template-columns: 20px 1fr; column-gap: 7px; align-items: center; font-size: 12px; }
+.sync-panel div span { grid-column: 2; color: #687078; }
+.sync-panel button { min-height: 32px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; color: #24292e; background: #f4f0e7; border: 1px solid #d0c8bc; border-radius: 6px; }
 .audio-settings { max-height: 145px; overflow: auto; margin-top: 6px; }
 .audio-settings summary { cursor: pointer; font-size: 12px; padding: 4px 0; }
 .audio-clip-controls { padding: 6px 0; border-top: 1px solid #c2cbce; }

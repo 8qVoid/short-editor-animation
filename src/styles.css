@@ -118,6 +118,10 @@ button {
   display: none;
 }
 
+.mobile-sheet-handle {
+  display: none;
+}
+
 .left-panel,
 .right-panel {
   min-height: 0;
@@ -458,22 +462,29 @@ button:disabled { cursor: default; opacity: .4; }
   .category-list button { font-size: 11px; padding: 5px 2px; }
 }
 @media (max-width: 600px), (max-height: 480px) {
-  body { overflow: hidden; }
+  html,
+  body {
+    width: 100%;
+    overflow: hidden;
+  }
   .app {
     grid-template-rows: 48px minmax(0, 1fr) 54px;
     position: fixed;
     inset: 0;
+    width: 100vw;
+    max-width: 100vw;
+    overflow: hidden;
   }
   .topbar {
+    display: grid;
+    grid-template-columns: minmax(88px, 112px) minmax(0, 1fr);
     padding: 0 8px;
-    gap: 8px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    gap: 6px;
+    overflow: hidden;
   }
   .topbar > div {
-    min-width: 96px;
-    max-width: 130px;
-    flex: 0 0 auto;
+    min-width: 0;
+    max-width: none;
   }
   .topbar strong {
     font-size: 13px;
@@ -487,6 +498,16 @@ button:disabled { cursor: default; opacity: .4; }
   }
   .topbar nav {
     gap: 5px;
+    min-width: 0;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .topbar nav::-webkit-scrollbar,
+  .timeline-actions::-webkit-scrollbar,
+  .category-list::-webkit-scrollbar {
+    display: none;
   }
   .topbar button,
   .file-button,
@@ -523,6 +544,7 @@ button:disabled { cursor: default; opacity: .4; }
     grid-template-columns: 1fr;
     min-height: 0;
     overflow: hidden;
+    width: 100vw;
   }
   .canvas-wrap {
     grid-column: 1;
@@ -538,14 +560,16 @@ button:disabled { cursor: default; opacity: .4; }
     bottom: 54px;
     z-index: 20;
     display: none;
-    max-height: min(58dvh, 430px);
-    min-height: 225px;
-    padding: 10px;
+    height: calc(var(--mobile-sheet, 38) * 1dvh);
+    max-height: 68dvh;
+    min-height: 18dvh;
+    padding: 24px 10px 10px;
     border: 0;
     border-top: 1px solid #cfc6b7;
-    border-radius: 12px 12px 0 0;
+    border-radius: 14px 14px 0 0;
     box-shadow: 0 -12px 30px rgba(0,0,0,.25);
     overflow: auto;
+    overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
   }
   .mobile-panel-assets .left-panel,
@@ -573,6 +597,7 @@ button:disabled { cursor: default; opacity: .4; }
     gap: 7px;
     margin: 10px 0;
     overflow-x: auto;
+    overscroll-behavior-x: contain;
     padding-bottom: 3px;
   }
   .category-list button {
@@ -586,8 +611,9 @@ button:disabled { cursor: default; opacity: .4; }
     gap: 8px;
   }
   .asset-card {
-    min-height: 116px;
-    grid-template-rows: 70px auto;
+    min-height: 104px;
+    grid-template-rows: 62px auto;
+    padding: 7px;
   }
   .fields {
     grid-template-columns: 1fr 1fr;
@@ -622,6 +648,7 @@ button:disabled { cursor: default; opacity: .4; }
   .timeline-actions {
     gap: 6px;
     margin-bottom: 7px;
+    scrollbar-width: none;
   }
   .timecode {
     min-width: 126px;
@@ -629,6 +656,9 @@ button:disabled { cursor: default; opacity: .4; }
   }
   .timeline-scroll {
     height: 104px;
+    max-width: 100%;
+    overflow: auto;
+    overscroll-behavior: contain;
   }
   .timeline:has(.audio-timeline-clip) .timeline-scroll {
     height: 130px;
@@ -639,6 +669,31 @@ button:disabled { cursor: default; opacity: .4; }
   .key-track {
     min-width: 260px;
   }
+  .mobile-sheet-handle {
+    position: fixed;
+    left: 50%;
+    bottom: calc(54px + (var(--mobile-sheet, 38) * 1dvh) - 19px);
+    z-index: 32;
+    width: 76px;
+    height: 34px;
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-columns: 1fr 18px;
+    align-items: center;
+    gap: 5px;
+    padding: 0 9px;
+    color: #394148;
+    background: #f4f0e7;
+    border: 1px solid #cfc6b7;
+    border-radius: 999px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.18);
+    touch-action: none;
+  }
+  .mobile-sheet-handle span {
+    height: 5px;
+    border-radius: 999px;
+    background: #8e887c;
+  }
   .mobile-dock {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -647,6 +702,7 @@ button:disabled { cursor: default; opacity: .4; }
     background: #f4f0e7;
     border-top: 1px solid #cac3b6;
     z-index: 30;
+    width: 100vw;
   }
   .mobile-dock button {
     min-width: 0;
@@ -678,7 +734,7 @@ button:disabled { cursor: default; opacity: .4; }
   .left-panel,
   .right-panel,
   .timeline {
-    max-height: min(62dvh, 450px);
+    max-height: 70dvh;
   }
   .mobile-dock button {
     font-size: 11px;

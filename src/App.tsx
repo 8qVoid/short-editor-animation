@@ -1,4 +1,5 @@
-import { Box, Clapperboard, SlidersHorizontal } from "lucide-react";
+import { Box, ChevronsDownUp, Clapperboard, SlidersHorizontal } from "lucide-react";
+import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { AssetBrowser } from "./components/AssetBrowser";
 import { EditorCanvas } from "./components/EditorCanvas";
@@ -12,6 +13,7 @@ export default function App() {
   const { loadProject, autosave, deleteSelected, duplicateSelected, undo, redo } = useEditorStore();
   const [restored, setRestored] = useState(false);
   const [mobilePanel, setMobilePanel] = useState<"assets" | "properties" | "timeline">("assets");
+  const [sheetHeight, setSheetHeight] = useState(38);
 
   useEffect(() => {
     let cancelled = false;
@@ -64,7 +66,7 @@ export default function App() {
   }, [deleteSelected, duplicateSelected, redo, undo]);
 
   return (
-    <div className={`app mobile-panel-${mobilePanel}`}>
+    <div className={`app mobile-panel-${mobilePanel}`} style={{ "--mobile-sheet": sheetHeight } as CSSProperties}>
       <TopBar />
       <div className="workspace">
         <AssetBrowser />
@@ -72,6 +74,28 @@ export default function App() {
         <PropertiesPanel />
       </div>
       <Timeline />
+      <button
+        className="mobile-sheet-handle"
+        aria-label="Resize mobile panel"
+        title="Drag to resize panel"
+        onPointerDown={(event) => {
+          event.preventDefault();
+          event.currentTarget.setPointerCapture(event.pointerId);
+          const move = (moveEvent: PointerEvent) => {
+            const next = Math.round((1 - moveEvent.clientY / window.innerHeight) * 100) - 6;
+            setSheetHeight(Math.max(18, Math.min(68, next)));
+          };
+          const stop = () => {
+            window.removeEventListener("pointermove", move);
+            window.removeEventListener("pointerup", stop);
+          };
+          window.addEventListener("pointermove", move);
+          window.addEventListener("pointerup", stop);
+        }}
+      >
+        <span />
+        <ChevronsDownUp size={15} />
+      </button>
       <nav className="mobile-dock" aria-label="Mobile editor panels">
         <button className={mobilePanel === "assets" ? "active" : ""} onClick={() => setMobilePanel("assets")}><Box size={18} /> Assets</button>
         <button className={mobilePanel === "properties" ? "active" : ""} onClick={() => setMobilePanel("properties")}><SlidersHorizontal size={18} /> Edit</button>

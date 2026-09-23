@@ -41,7 +41,7 @@ export interface Transform {
 
 export interface SceneObject {
   keyframes?: ObjectKeyframe[];
-  atmosphere?: "none" | "dust" | "breeze" | "rain";
+  atmosphere?: "none" | "dust" | "breeze" | "rain" | "clouds" | "traffic" | "lights";
   appearance?: CharacterAppearance;
   timeOfDay?: "day" | "sunrise" | "sunset" | "night";
   id: string;
@@ -132,6 +132,8 @@ export interface Shot {
   id: string;
   name: string;
   duration: number;
+  transition?: "cut" | "crossfade";
+  transitionDuration?: number;
   objects: SceneObject[];
   camera: Camera;
 }

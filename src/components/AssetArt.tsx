@@ -82,28 +82,35 @@ function SideCharacterArt({ asset, object, tick = 0 }: ArtProps) {
     ? [-56 * direction, 305, (-86 - cycle * 12) * direction, 410, -58 * direction, 500]
     : undefined;
 
+  const sideScaleX = object.transform.width / 420;
+  const sideScaleY = object.transform.height / 760;
+  const sideEyeX = headX + 39 * direction;
+  const faceX = headX + 45 * direction;
+
   return (
-    <Group x={object.transform.width / 2} y={8} scaleX={object.transform.width / 420} scaleY={object.transform.height / 760}>
+    <Group x={object.transform.width / 2} y={8} scaleX={sideScaleX} scaleY={sideScaleY}>
+      {/* Far limbs sit behind the torso; near limbs are drawn over it. */}
       <Line points={backLeg} stroke={stroke} strokeWidth={24} lineCap="round" lineJoin="round" tension={0.25} />
-      <Line points={frontLeg} stroke={stroke} strokeWidth={24} lineCap="round" lineJoin="round" tension={0.25} />
       <Line points={backLeg} stroke={accent} strokeWidth={13} lineCap="round" lineJoin="round" tension={0.25} />
-      <Line points={frontLeg} stroke={accent} strokeWidth={13} lineCap="round" lineJoin="round" tension={0.25} />
       <Group x={headX} scaleX={direction * .86}><Hair style={appearance.hair} color={accent} back /></Group>
       <Ellipse x={bodyX} y={seated ? 410 : 392 + Math.abs(cycle) * 6} radiusX={92} radiusY={seated ? 150 : 185} fill={color} stroke={stroke} strokeWidth={10} />
       <Group x={bodyX} scaleX={direction * .78}><Outfit outfit={appearance.outfit} color={color} seated={seated} /></Group>
       {trailingArm && <Line points={trailingArm} stroke={stroke} strokeWidth={18} lineCap="round" lineJoin="round" tension={0.35} />}
       {trailingArm && <Line points={trailingArm} stroke={appearance.skinColor} strokeWidth={10} lineCap="round" lineJoin="round" tension={0.35} />}
+      <Line points={frontLeg} stroke={stroke} strokeWidth={24} lineCap="round" lineJoin="round" tension={0.25} />
+      <Line points={frontLeg} stroke={accent} strokeWidth={13} lineCap="round" lineJoin="round" tension={0.25} />
       <Line points={arm} stroke={stroke} strokeWidth={22} lineCap="round" lineJoin="round" tension={0.35} />
       <Line points={arm} stroke={appearance.skinColor} strokeWidth={13} lineCap="round" lineJoin="round" tension={0.35} />
       <Ellipse x={headX} y={145} radiusX={102} radiusY={124} fill={appearance.skinColor} stroke={stroke} strokeWidth={10} />
       <Group x={headX} scaleX={direction * .86}><Hair style={appearance.hair} color={accent} /></Group>
-      <Ellipse x={headX + 38 * direction} y={154} radiusX={13} radiusY={blink ? 2 : expression === "happy" ? 5 : 12} fill={stroke} />
+      <Ellipse x={sideEyeX} y={154} radiusX={13} radiusY={blink ? 2 : expression === "happy" ? 5 : 12} fill={stroke} />
       <Line points={[headX + 10 * direction, 126, headX + 58 * direction, 120]} stroke={stroke} strokeWidth={8} rotation={expression === "angry" ? 12 : -4} lineCap="round" />
-      <Group x={headX + 35 * direction - 1} y={50} scaleX={0.72} scaleY={0.72}>
+      <Line points={[headX + 81 * direction, 166, headX + 94 * direction, 174, headX + 81 * direction, 182]} stroke={stroke} strokeWidth={5} lineCap="round" lineJoin="round" />
+      <Group x={faceX} y={50} scaleX={0.72} scaleY={0.72}>
         <MouthShape mouth={mouth} expression={expression} />
       </Group>
       <Circle x={arm[arm.length - 2]} y={arm[arm.length - 1]} radius={24} fill={appearance.skinColor} stroke={stroke} strokeWidth={8} />
-      <Closet items={object.closet} accent={accent} />
+      <Group scaleX={direction}><Closet items={object.closet} accent={accent} /></Group>
     </Group>
   );
 }
@@ -117,7 +124,7 @@ function CharacterArt({ asset, object, tick = 0 }: ArtProps) {
   const action = object.action ?? "idle";
   const view = object.view ?? "front";
   if (view === "side-left" || view === "side-right" || view === "seated-side" || action === "walking" || action === "running" || action === "sitting") {
-    const sideObject = { ...object, view: view === "front" || view.startsWith("three") ? "side-right" : view };
+    const sideObject = { ...object, view: view === "front" ? "side-right" : view };
     return <SideCharacterArt asset={asset} object={sideObject} tick={tick} />;
   }
   const activePose = action === "waving" ? "explaining" : pose;
@@ -139,6 +146,10 @@ function CharacterArt({ asset, object, tick = 0 }: ArtProps) {
   const rightLeg = [42, 565, 58, 705];
   const animatedRightArm = action === "waving" ? [75, 255, 150 + wave, 190, 190 + wave, 105] : rightArm;
   const mouth = action === "talking" && (!object.mouth || object.mouth === "auto") ? (talkOpen ? "talk-wide" : "talk-small") : object.mouth;
+  const threeQuarter = view === "three-quarter-left" || view === "three-quarter-right";
+  const lookDirection = view === "three-quarter-left" ? -1 : 1;
+  const nearEyeX = threeQuarter ? lookDirection * 47 : -38;
+  const farEyeX = threeQuarter ? -lookDirection * 42 : 42;
 
   return (
     <Group x={object.transform.width / 2} y={8 - 705 * breathing * object.transform.height / 760} scaleX={object.transform.width / 420} scaleY={object.transform.height / 760 * (1 + breathing)}>
@@ -157,9 +168,10 @@ function CharacterArt({ asset, object, tick = 0 }: ArtProps) {
       <Hair style={appearance.hair} color={accent} />
       <Line points={[-58, 128, -20, 118]} stroke={stroke} strokeWidth={8} rotation={eyebrowTilt} lineCap="round" />
       <Line points={[28, 118, 66, 128]} stroke={stroke} strokeWidth={8} rotation={-eyebrowTilt} lineCap="round" />
-      <Ellipse x={view === "three-quarter-left" ? -52 : -38} y={eyeY} radiusX={13} radiusY={eyeHeight} fill={stroke} />
-      <Ellipse x={view === "three-quarter-right" ? 56 : 42} y={eyeY} radiusX={13} radiusY={eyeHeight} fill={stroke} />
-      <Group y={mouthY}><MouthShape mouth={mouth} expression={expression} /></Group>
+      <Ellipse x={nearEyeX} y={eyeY} radiusX={threeQuarter ? 14 : 13} radiusY={eyeHeight} fill={stroke} />
+      <Ellipse x={farEyeX} y={eyeY + (threeQuarter ? 2 : 0)} radiusX={threeQuarter ? 8 : 13} radiusY={threeQuarter ? eyeHeight * 0.82 : eyeHeight} fill={stroke} opacity={threeQuarter ? 0.78 : 1} />
+      {threeQuarter && <Line points={[lookDirection * 18, 160, lookDirection * 29, 178, lookDirection * 13, 184]} stroke={stroke} strokeWidth={5} lineCap="round" lineJoin="round" />}
+      <Group x={threeQuarter ? lookDirection * 12 : 0} y={mouthY}><MouthShape mouth={mouth} expression={expression} /></Group>
       <Circle x={leftArm[leftArm.length - 2]} y={leftArm[leftArm.length - 1]} radius={24} fill={appearance.skinColor} stroke={stroke} strokeWidth={8} />
       <Circle x={animatedRightArm[animatedRightArm.length - 2]} y={animatedRightArm[animatedRightArm.length - 1]} radius={24} fill={appearance.skinColor} stroke={stroke} strokeWidth={8} />
       <Closet items={object.closet} accent={accent} />
@@ -174,6 +186,26 @@ function PropArt({ asset, object, tick = 0 }: ArtProps) {
   const w = object.transform.width;
   const h = object.transform.height;
   const pulse = 1 + Math.sin(tick * 0.004) * 0.08;
+  if (asset.thumbnail === "dumbbell") return <Group>
+    <Line points={[w * .18, h * .5, w * .82, h * .5]} stroke={stroke} strokeWidth={Math.max(9, h * .08)} lineCap="round" />
+    {[.18, .3, .7, .82].map((x, i) => <Rect key={x} x={w * x - w * (i % 2 ? .035 : .05)} y={h * (i % 2 ? .31 : .23)} width={w * (i % 2 ? .07 : .1)} height={h * (i % 2 ? .38 : .54)} cornerRadius={8} fill={i % 2 ? color : accent} stroke={stroke} strokeWidth={5} />)}
+  </Group>;
+  if (asset.thumbnail === "shopping-bag") return <Group>
+    <Line points={[w * .28, h * .36, w * .34, h * .12, w * .66, h * .12, w * .72, h * .36]} stroke={accent} strokeWidth={9} lineCap="round" lineJoin="round" />
+    <Line points={[w * .18, h * .32, w * .82, h * .32, w * .76, h * .9, w * .24, h * .9]} closed fill={color} stroke={stroke} strokeWidth={7} lineJoin="round" />
+    <Line points={[w * .42, h * .48, w * .58, h * .48]} stroke="#f7edda" strokeWidth={6} lineCap="round" />
+  </Group>;
+  if (asset.thumbnail === "plate") return <Group>
+    <Ellipse x={w * .5} y={h * .52} radiusX={w * .42} radiusY={h * .34} fill={accent} stroke={stroke} strokeWidth={7} />
+    <Ellipse x={w * .5} y={h * .49} radiusX={w * .34} radiusY={h * .24} fill={color} stroke="#d5d1c5" strokeWidth={5} />
+    <Ellipse x={w * .5} y={h * .49} radiusX={w * .2} radiusY={h * .13} fill="#dca46a" stroke="#a95c3c" strokeWidth={4} />
+  </Group>;
+  if (asset.thumbnail === "bed") return <Group>
+    <Rect x={w * .1} y={h * .2} width={w * .8} height={h * .65} fill={accent} stroke={stroke} strokeWidth={7} cornerRadius={9} />
+    <Rect x={w * .17} y={h * .36} width={w * .76} height={h * .39} fill={color} stroke={stroke} strokeWidth={6} cornerRadius={9} />
+    <Rect x={w * .2} y={h * .26} width={w * .27} height={h * .18} fill="#f4eee0" stroke={stroke} strokeWidth={4} cornerRadius={7} />
+    <Line points={[w * .12, h * .84, w * .12, h * .96, w * .88, h * .96, w * .88, h * .84]} stroke={stroke} strokeWidth={8} lineCap="round" />
+  </Group>;
   if (asset.thumbnail === "microwave") return <Group><Rect x={8} y={h*.15} width={w-16} height={h*.7} fill={color} stroke={stroke} strokeWidth={6} cornerRadius={12}/><Rect x={w*.08} y={h*.24} width={w*.59} height={h*.48} fill={accent} stroke={stroke} strokeWidth={5} cornerRadius={6}/><Line points={[w*.16,h*.62,w*.54,h*.34]} stroke="#8aa7ac" strokeWidth={9} opacity={.4}/><Rect x={w*.76} y={h*.25} width={w*.15} height={h*.13} fill="#172b26"/><Text text="0:05" x={w*.76} y={h*.27} width={w*.15} align="center" fontSize={w*.047} fill="#a8eaa0"/><Circle x={w*.83} y={h*.55} radius={w*.06} fill="#adb8ba" stroke={stroke} strokeWidth={4}/></Group>;
   if (asset.thumbnail === "pizza") return <Group><Ellipse x={w/2} y={h*.55} radiusX={w*.46} radiusY={h*.36} fill="#faf5e8" stroke={stroke} strokeWidth={5}/><Ellipse x={w/2} y={h*.5} radiusX={w*.4} radiusY={h*.3} fill={color} stroke="#a97135" strokeWidth={10}/>{[0,1,2,3,4,5].map(i=><Circle key={i} x={w*(.5+Math.cos(i*Math.PI/3)*.25)} y={h*(.5+Math.sin(i*Math.PI/3)*.17)} radius={Math.min(w,h)*.06} fill={accent}/>)}<Line points={[w*.15,h*.5,w*.85,h*.5]} stroke="#b28244" strokeWidth={3}/><Line points={[w*.3,h*.28,w*.7,h*.72]} stroke="#b28244" strokeWidth={3}/></Group>;
   if (asset.thumbnail === "clock") return <Group x={w/2} y={h/2}><Circle radius={Math.min(w,h)*.42} fill={color} stroke={accent} strokeWidth={9}/>{Array.from({length:12},(_,i)=><Circle key={i} x={Math.sin(i*Math.PI/6)*Math.min(w,h)*.34} y={-Math.cos(i*Math.PI/6)*Math.min(w,h)*.34} radius={3} fill={accent}/>)}<Line points={[0,0,0,-h*.22]} rotation={tick*.006} stroke={accent} strokeWidth={5} lineCap="round"/><Line points={[0,0,w*.17,0]} stroke={accent} strokeWidth={6} lineCap="round"/><Circle radius={6} fill="#cc6158"/></Group>;

@@ -37,6 +37,17 @@ export default function App() {
   }, [autosave, restored]);
 
   useEffect(() => {
+    const saveOnExit = () => autosave();
+    const saveWhenHidden = () => { if (document.visibilityState === "hidden") autosave(); };
+    window.addEventListener("pagehide", saveOnExit);
+    document.addEventListener("visibilitychange", saveWhenHidden);
+    return () => {
+      window.removeEventListener("pagehide", saveOnExit);
+      document.removeEventListener("visibilitychange", saveWhenHidden);
+    };
+  }, [autosave]);
+
+  useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement;
       if (["INPUT", "TEXTAREA", "SELECT", "AUDIO"].includes(target.tagName)) return;

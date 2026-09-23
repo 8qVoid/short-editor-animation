@@ -52,7 +52,7 @@ export function PropertiesPanel() {
         </div>
       </>}
       {object.kind === "background" && <>
-        <label className="field"><span>Atmosphere</span><select aria-label="Atmosphere" value={object.atmosphere??'none'} onChange={e=>updateObject(object.id,{atmosphere:e.target.value as typeof object.atmosphere})}><option value="none">None</option><option value="dust">Floating dust</option><option value="breeze">Clouds and breeze</option><option value="rain">Rain</option></select></label>
+        <label className="field"><span>Atmosphere</span><select aria-label="Atmosphere" value={object.atmosphere??'none'} onChange={e=>updateObject(object.id,{atmosphere:e.target.value as typeof object.atmosphere})}><option value="none">None</option><option value="dust">Floating dust</option><option value="breeze">Clouds and breeze</option><option value="clouds">Slow clouds</option><option value="rain">Rain</option><option value="traffic">Passing traffic</option><option value="lights">Twinkling lights</option></select></label>
         <div className="section-label">Time of Day</div>
         <div className="picker-grid" role="group" aria-label="Time of day">
           {(["day", "sunrise", "sunset", "night"] as const).map(time => <button key={time} aria-pressed={(object.timeOfDay ?? (object.assetId === "bg-night" ? "night" : "day")) === time} className={(object.timeOfDay ?? (object.assetId === "bg-night" ? "night" : "day")) === time ? "active" : ""} onClick={() => updateObject(object.id, { timeOfDay: time })}>{time.charAt(0).toUpperCase() + time.slice(1)}</button>)}

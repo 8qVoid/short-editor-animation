@@ -25,10 +25,20 @@ const categories: AssetCategory[] = ["Characters", "Backgrounds", "Props", "Shap
 
 export function AssetBrowser() {
   const { activeCategory, setActiveCategory, search, setSearch, addAssetToActiveShot } = useEditorStore();
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem("shorts-editor-favorites") ?? "[]"); }
+    catch { return []; }
+  });
+  const [showFavorites, setShowFavorites] = useState(false);
+  const toggleFavorite = (id: string) => setFavorites(current => {
+    const next = current.includes(id) ? current.filter(item => item !== id) : [...current, id];
+    localStorage.setItem("shorts-editor-favorites", JSON.stringify(next));
+    return next;
+  });
   const filtered = assets.filter((asset) => {
     const term = search.trim().toLowerCase();
     const matchesSearch = !term || asset.name.toLowerCase().includes(term) || asset.tags.some((tag) => tag.includes(term));
-    return asset.category === activeCategory && matchesSearch;
+    return (showFavorites ? favorites.includes(asset.id) : asset.category === activeCategory) && matchesSearch;
   });
 
   return (
@@ -39,28 +49,32 @@ export function AssetBrowser() {
         <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search money, office, sad..." />
       </label>
       <div className="category-list">
+        <button className={showFavorites ? "active" : ""} aria-pressed={showFavorites} onClick={() => setShowFavorites(value => !value)}><Star size={14} /> Favorites</button>
         {categories.map((category) => (
-          <button key={category} className={category === activeCategory ? "active" : ""} onClick={() => setActiveCategory(category)}>
+          <button key={category} className={!showFavorites && category === activeCategory ? "active" : ""} onClick={() => { setShowFavorites(false); setActiveCategory(category); }}>
             {category}
           </button>
         ))}
       </div>
       <div className="asset-grid">
         {filtered.map((asset) => (
-          <button
+          <div
             key={asset.id}
             className="asset-card"
+            role="button"
+            tabIndex={0}
             draggable
             onDragStart={(event) => event.dataTransfer.setData("asset/id", asset.id)}
             onClick={() => addAssetToActiveShot(asset)}
+            onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); addAssetToActiveShot(asset); } }}
             title={asset.tags.join(", ")}
           >
             <div className="asset-thumb" style={{ background: asset.color }}>
               {asset.kind !== "text" ? <BackgroundPreview asset={asset} /> : <span>Aa</span>}
             </div>
             <span>{asset.name}</span>
-            <Star size={13} />
-          </button>
+            <button className={`asset-favorite ${favorites.includes(asset.id) ? "active" : ""}`} type="button" aria-label={`${favorites.includes(asset.id) ? "Remove" : "Add"} ${asset.name} ${favorites.includes(asset.id) ? "from" : "to"} favorites`} aria-pressed={favorites.includes(asset.id)} onClick={event => { event.stopPropagation(); toggleFavorite(asset.id); }} onKeyDown={event => event.stopPropagation()}><Star size={15} fill={favorites.includes(asset.id) ? "currentColor" : "none"} /></button>
+          </div>
         ))}
       </div>
     </aside>

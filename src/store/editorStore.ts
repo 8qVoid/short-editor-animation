@@ -111,6 +111,7 @@ interface EditorState {
   deleteSelected: () => void;
   duplicateSelected: () => void;
   setShotDuration: (duration: number) => void;
+  setShotTransition: (id: string, transition: "cut" | "crossfade", duration?: number) => void;
   addShot: () => void;
   duplicateShot: () => void;
   deleteShot: (shotId: string) => void;
@@ -459,6 +460,14 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     }),
   setShotDuration: (duration) =>
     set((state) => !Number.isFinite(duration) || duration <= 0 ? {} : withHistory(state, mutateActiveShot(state.project, (shot) => ({ ...shot, duration: Math.max(1, Math.round(duration * state.project.canvas.fps)) / state.project.canvas.fps })))),
+  setShotTransition: (id, transition, duration) => set(state => {
+    const project = { ...state.project, shots: state.project.shots.map(shot => shot.id !== id ? shot : {
+      ...shot,
+      transition,
+      transitionDuration: duration === undefined ? shot.transitionDuration ?? .5 : Math.max(.1, Math.min(shot.duration, Number.isFinite(duration) ? duration : .5))
+    }) };
+    return withHistory(state, project);
+  }),
   addShot: () =>
     set((state) => {
       const shot: Shot = { ...starterShot(), name: `Shot ${state.project.shots.length + 1}` };

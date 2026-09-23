@@ -7,6 +7,7 @@ import { AssetArt } from "./AssetArt";
 import { SceneLighting } from "./SceneLighting";
 import { Atmosphere } from "./Atmosphere";
 import { cameraAt, objectAt } from "../animation";
+import { ScanLine } from "lucide-react";
 
 export function EditorCanvas() {
   const wrapRef = useRef<HTMLElement>(null);
@@ -15,6 +16,7 @@ export function EditorCanvas() {
   const sceneRef = useRef<Konva.Group>(null);
   const [stageSize, setStageSize] = useState({ width: 760, height: 760 });
   const [centerGuides, setCenterGuides] = useState({ vertical: false, horizontal: false });
+  const [showSafeArea, setShowSafeArea] = useState(false);
   const playhead = useEditorStore(state => state.playhead);
   const {
     project,
@@ -28,9 +30,19 @@ export function EditorCanvas() {
   const fitScale = Math.max(.01, Math.min((stageSize.width - 48) / project.canvas.width, (stageSize.height - 48) / project.canvas.height));
   const stageScale = fitScale * zoomScale / .36;
   const shot = project.shots.find((item) => item.id === project.activeShotId)!;
+  const shotIndex = project.shots.indexOf(shot);
   const shotStart = project.shots.slice(0, project.shots.indexOf(shot)).reduce((sum, item) => sum + item.duration, 0);
   const tick = (Math.max(0, playhead - shotStart) + (shot.animationOffset ?? 0)) * 1000;
   const camera = cameraAt(shot, tick / 1000);
+  const nextShot = project.shots[shotIndex + 1];
+  const fadeLength = Math.min(shot.transitionDuration ?? .5, shot.duration);
+  const shotTime = Math.max(0, playhead - shotStart);
+  const transitionProgress = shot.transition === "crossfade" && nextShot
+    ? Math.max(0, Math.min(1, (shotTime - (shot.duration - fadeLength)) / fadeLength))
+    : 0;
+  const incomingTime = (nextShot?.animationOffset ?? 0) + transitionProgress * fadeLength;
+  const incomingCamera = nextShot ? cameraAt(nextShot, incomingTime) : undefined;
+  const incomingBackground = nextShot && [...nextShot.objects].filter(object => object.kind === "background" && !object.hidden && object.transform.opacity > 0).sort((a, b) => b.layer - a.layer)[0];
   const playing = useEditorStore(state => state.playing);
   const background = [...shot.objects].filter(object => object.kind === "background" && !object.hidden && object.transform.opacity > 0).sort((a, b) => b.layer - a.layer)[0];
   const snapToCenter = (node: Konva.Node, object: typeof shot.objects[number]) => {
@@ -93,6 +105,7 @@ export function EditorCanvas() {
         addAssetToActiveShot(asset, x, y);
       }}
     >
+      <button className={`canvas-guide-toggle ${showSafeArea ? "active" : ""}`} aria-label="Toggle caption safe area" aria-pressed={showSafeArea} title="Caption safe area" onClick={() => setShowSafeArea(value => !value)}><ScanLine size={16} /></button>
       <Stage
         ref={stageRef}
         width={stageSize.width}
@@ -121,9 +134,11 @@ export function EditorCanvas() {
               listening={false}
             />
             <Rect width={project.canvas.width} height={project.canvas.height} fill="#f5f0e3" stroke="#111" strokeWidth={4} />
-            <Rect x={project.canvas.width * .05} y={project.canvas.height * .05} width={project.canvas.width * .9} height={project.canvas.height * .9} stroke="#e76650" strokeWidth={3} dash={[20, 16]} opacity={0.75} listening={false} />
-            <Rect x={project.canvas.width / 2 - 1} y={0} width={2} height={project.canvas.height} fill="#58a6a6" opacity={0.35} listening={false} />
-            <Rect x={0} y={project.canvas.height / 2 - 1} width={project.canvas.width} height={2} fill="#58a6a6" opacity={0.35} listening={false} />
+            {showSafeArea && <>
+              <Rect x={project.canvas.width * .08} y={project.canvas.height * .08} width={project.canvas.width * .84} height={project.canvas.height * .76} stroke="#48a99a" strokeWidth={3} dash={[20, 16]} opacity={0.8} listening={false} />
+              <Rect x={project.canvas.width / 2 - 1} y={0} width={2} height={project.canvas.height} fill="#58a6a6" opacity={0.28} listening={false} />
+              <Rect x={0} y={project.canvas.height / 2 - 1} width={project.canvas.width} height={2} fill="#58a6a6" opacity={0.28} listening={false} />
+            </>}
             {centerGuides.vertical && (
               <Line points={[project.canvas.width / 2, 0, project.canvas.width / 2, project.canvas.height]} stroke="#22c7ff" strokeWidth={5} dash={[18, 14]} opacity={0.85} listening={false} />
             )}
@@ -186,6 +201,20 @@ export function EditorCanvas() {
             <Atmosphere object={background} width={project.canvas.width} height={project.canvas.height} tick={tick} />
             </Group>
             </Group>
+            {nextShot && incomingCamera && transitionProgress > 0 && <Group opacity={transitionProgress} listening={false} clipWidth={project.canvas.width} clipHeight={project.canvas.height}>
+              <Group x={project.canvas.width / 2} y={project.canvas.height / 2} offsetX={project.canvas.width / 2 + incomingCamera.x} offsetY={project.canvas.height / 2 + incomingCamera.y} scaleX={incomingCamera.zoom} scaleY={incomingCamera.zoom} rotation={incomingCamera.rotation}>
+                {[...nextShot.objects].map(item => objectAt(item, incomingTime)).sort((a, b) => a.kind === "background" ? -1 : b.kind === "background" ? 1 : a.layer - b.layer).map(item => {
+                  const asset = assetById(item.assetId);
+                  if (!asset || item.hidden) return null;
+                  const transform = item.transform;
+                  return <Group key={`incoming-${item.id}`} x={transform.x} y={transform.y} width={transform.width} height={transform.height} scaleX={transform.scaleX * (transform.flipX ? -1 : 1)} scaleY={transform.scaleY * (transform.flipY ? -1 : 1)} rotation={transform.rotation} opacity={transform.opacity}>
+                    <AssetArt asset={asset} object={item} tick={incomingTime * 1000} />
+                  </Group>;
+                })}
+                <SceneLighting object={incomingBackground} width={project.canvas.width} height={project.canvas.height} />
+                <Atmosphere object={incomingBackground} width={project.canvas.width} height={project.canvas.height} tick={incomingTime * 1000} />
+              </Group>
+            </Group>}
             <Transformer
               ref={transformerRef}
               rotateEnabled

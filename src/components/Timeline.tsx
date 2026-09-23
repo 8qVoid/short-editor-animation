@@ -76,6 +76,7 @@ export function Timeline() {
           <button className="clip-body" draggable title={`${shot.name}: ${shot.duration.toFixed(2)} seconds`} onDragStart={e => e.dataTransfer.setData("shot/id", shot.id)} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); moveShot(e.dataTransfer.getData("shot/id"), shot.id); }} onClick={() => setActiveShot(shot.id)}>
             <strong>{index + 1}. {shot.name}</strong><small>{shot.duration.toFixed(2)}s</small>
           </button>
+          {shot.transition === "crossfade" && index < project.shots.length - 1 && <i className="clip-transition" title={`Fade to next shot: ${(shot.transitionDuration ?? .5).toFixed(1)}s`} style={{ width: Math.min(shot.duration, shot.transitionDuration ?? .5) * zoom }} />}
           <div className="clip-trim" role="separator" aria-label={`Trim ${shot.name}`} title="Drag to trim duration"
             onPointerDown={e => { e.currentTarget.setPointerCapture(e.pointerId); setActiveShot(shot.id); setTrim({ id: shot.id, x: e.clientX, duration: shot.duration, next: shot.duration }); }}
             onPointerMove={e => { if (trim?.id === shot.id) setTrim({ ...trim, next: Math.max(1, Math.round((trim.duration + (e.clientX - trim.x) / zoom) * fps)) / fps }); }}

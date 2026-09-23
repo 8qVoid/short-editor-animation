@@ -206,14 +206,35 @@ button {
   background: #fffdf7;
   border: 1px solid #d0c8bc;
   border-radius: 8px;
+  cursor: pointer;
 }
 
-.asset-card svg {
+.asset-card > svg {
   position: absolute;
   right: 8px;
   bottom: 8px;
   color: #8b8173;
 }
+
+.asset-card:focus-visible,
+.asset-favorite:focus-visible,
+.canvas-guide-toggle:focus-visible { outline: 2px solid #087c78; outline-offset: 2px; }
+.asset-favorite {
+  position: absolute;
+  right: 4px;
+  bottom: 3px;
+  z-index: 1;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #766b5e;
+  background: #fffdf7;
+  border: 1px solid #d0c8bc;
+  border-radius: 5px;
+}
+.asset-favorite.active { color: #ad7028; }
 
 .asset-thumb {
   border: 2px solid #1f2328;
@@ -236,6 +257,7 @@ button {
 }
 
 .canvas-wrap {
+  position: relative;
   min-width: 0;
   min-height: 0;
   background:
@@ -246,6 +268,23 @@ button {
   overflow: hidden;
   touch-action: none;
 }
+
+.canvas-guide-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: #29333a;
+  background: #fffdf7;
+  border: 1px solid #d0c8bc;
+  border-radius: 7px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+.canvas-guide-toggle.active { color: #fff; background: #147b72; border-color: #147b72; }
 
 .object-name {
   width: 100%;
@@ -365,6 +404,7 @@ button {
 .time-ruler span { position: absolute; border-left: 1px solid #8d9ba0; padding-left: 4px; font-size: 10px; height: 20px; pointer-events: none; }
 .timeline-clip { position: absolute; top: 38px; height: 60px; min-width: 3px; border: 1px solid #64958f; border-radius: 4px; background: #c5e1da; overflow: hidden; }
 .timeline-clip.selected { border: 2px solid #167b70; }
+.clip-transition { position: absolute; z-index: 2; right: 0; top: 0; bottom: 0; pointer-events: none; background: linear-gradient(90deg, rgba(89,165,153,0), rgba(43,128,117,.62)); border-left: 1px dashed #287d73; }
 .timeline .clip-body { border: 0; border-radius: 0; background: transparent; width: 100%; height: 100%; padding: 8px 14px 8px 7px; display: flex; align-items: flex-start; justify-content: center; flex-direction: column; gap: 4px; overflow: hidden; }
 .clip-body strong, .clip-body small { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 11px; }
 .clip-trim { position: absolute; right: 0; top: 0; bottom: 0; width: 9px; cursor: ew-resize; background: #448b80; touch-action: none; }
@@ -551,6 +591,7 @@ button:disabled { cursor: default; opacity: .4; }
     grid-row: 1;
     min-height: 0;
   }
+  .canvas-guide-toggle { top: 8px; right: 8px; width: 40px; height: 40px; }
   .left-panel,
   .right-panel,
   .timeline {

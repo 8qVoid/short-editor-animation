@@ -4,6 +4,7 @@ import type { Asset, AudioClip, CaptionCue, Project, SceneObject, Shot, ShotTran
 import { readAutosave, writeAutosave } from "./projectStorage";
 import { cameraAt, cameraKeys, insertKey, motionKeys, objectAt, snapshot, type MotionPreset } from "../animation";
 import type { Camera, Easing } from "../types/editor";
+import { defaultScreen } from "../data/screenContent";
 
 const projectId = () => crypto.randomUUID();
 
@@ -429,6 +430,9 @@ export const useEditorStore = create<EditorState>((set, get) => ({
               ? { x, y, width: 380, height: 690 }
               : asset.imageWidth && asset.imageHeight
                 ? (() => { const scale = Math.min(600 / asset.imageWidth, 760 / asset.imageHeight); return { x, y, width: asset.imageWidth * scale, height: asset.imageHeight * scale }; })()
+              : asset.id === "prop-phone" ? { x, y, width: 300, height: 520 }
+              : asset.id === "prop-laptop" ? { x, y, width: 460, height: 320 }
+              : asset.id === "prop-brand-sign" ? { x, y, width: 500, height: 330 }
               : { x, y, width: 260, height: 220 };
       const object: SceneObject = {
         id: projectId(),
@@ -446,7 +450,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
         action: asset.kind === "character" ? "idle" : undefined,
         view: asset.kind === "character" ? "front" : undefined,
         closet: asset.kind === "character" ? [] : undefined,
-        text: asset.kind === "text" ? "YOUR SHORTS CAPTION" : undefined
+        text: asset.kind === "text" ? "YOUR SHORTS CAPTION" : undefined,
+        screen: defaultScreen(asset.id)
       };
       const project = mutateActiveShot(state.project, (shot) => ({
         ...shot,

@@ -46,6 +46,7 @@ export interface Transform {
 
 export interface SceneObject {
   keyframes?: ObjectKeyframe[];
+  screen?: ScreenContent;
   atmosphere?: "none" | "dust" | "breeze" | "rain" | "clouds" | "traffic" | "lights";
   appearance?: CharacterAppearance;
   timeOfDay?: "day" | "sunrise" | "sunset" | "night";
@@ -76,6 +77,17 @@ export interface SceneObject {
   chromaKeySoftness?: number;
   visibleFrom?: number;
   visibleUntil?: number;
+}
+
+export type ScreenMode = "text" | "notification" | "chart" | "map" | "image";
+export interface ScreenContent {
+  mode: ScreenMode;
+  brand: string;
+  title: string;
+  body: string;
+  accent: string;
+  graphValues: number[];
+  imageData?: string;
 }
 
 export type ExpressionId =

@@ -1,0 +1,1586 @@
+{
+  "id": "project-37",
+  "name": "The Get Rich Potion",
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "shots": [
+    {
+      "id": "shot-6",
+      "name": "01 - The discovery",
+      "duration": 2.2,
+      "transition": "zoom",
+      "transitionDuration": 0.35,
+      "camera": {
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+        "rotation": 0
+      },
+      "objects": [
+        {
+          "id": "background-3",
+          "assetId": "bg-lab",
+          "name": "bg-lab",
+          "kind": "background",
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "width": 1080,
+            "height": 1920,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": true,
+          "hidden": false,
+          "layer": 0,
+          "atmosphere": "lights"
+        },
+        {
+          "id": "actor-1",
+          "assetId": "char-young-man",
+          "name": "Alex",
+          "kind": "character",
+          "transform": {
+            "x": 315,
+            "y": 870,
+            "width": 440,
+            "height": 730,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 5,
+          "appearance": {
+            "outfit": "casual",
+            "hair": "short",
+            "clothingColor": "#72a9ca"
+          },
+          "expression": "thinking",
+          "action": "walking",
+          "pose": "explaining",
+          "mouth": "auto",
+          "view": "three-quarter-right",
+          "closet": [],
+          "keyframes": [
+            {
+              "time": 0,
+              "easing": "smooth",
+              "transform": {
+                "x": 190,
+                "y": 870,
+                "width": 440,
+                "height": 730,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 0,
+                "flipX": false,
+                "flipY": false
+              },
+              "action": "walking",
+              "expression": "thinking",
+              "pose": "explaining",
+              "mouth": "auto",
+              "view": "three-quarter-right"
+            },
+            {
+              "time": 0.6,
+              "easing": "smooth",
+              "transform": {
+                "x": 315,
+                "y": 870,
+                "width": 440,
+                "height": 730,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              },
+              "action": "walking",
+              "expression": "thinking",
+              "pose": "explaining",
+              "mouth": "auto",
+              "view": "three-quarter-right"
+            },
+            {
+              "time": 2,
+              "easing": "smooth",
+              "transform": {
+                "x": 315,
+                "y": 870,
+                "width": 440,
+                "height": 730,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              },
+              "action": "idle",
+              "expression": "happy",
+              "pose": "explaining",
+              "mouth": "auto",
+              "view": "three-quarter-right"
+            }
+          ]
+        },
+        {
+          "id": "prop-2",
+          "assetId": "prop-lab-bottle",
+          "name": "prop-lab-bottle",
+          "kind": "prop",
+          "transform": {
+            "x": 592,
+            "y": 1100,
+            "width": 200,
+            "height": 295,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 6,
+          "keyframes": [
+            {
+              "time": 0,
+              "easing": "smooth",
+              "transform": {
+                "x": 592,
+                "y": 1340,
+                "width": 200,
+                "height": 295,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 0,
+                "flipX": false,
+                "flipY": false
+              }
+            },
+            {
+              "time": 0.8,
+              "easing": "smooth",
+              "transform": {
+                "x": 592,
+                "y": 1100,
+                "width": 200,
+                "height": 295,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              }
+            },
+            {
+              "time": 1.6,
+              "easing": "smooth",
+              "transform": {
+                "x": 592,
+                "y": 1060,
+                "width": 200,
+                "height": 295,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": -12,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              }
+            },
+            {
+              "time": 2.1,
+              "easing": "smooth",
+              "transform": {
+                "x": 592,
+                "y": 1100,
+                "width": 200,
+                "height": 295,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              }
+            }
+          ]
+        },
+        {
+          "id": "effect-4",
+          "assetId": "effect-glow",
+          "name": "effect-glow",
+          "kind": "effect",
+          "transform": {
+            "x": 500,
+            "y": 1010,
+            "width": 380,
+            "height": 400,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 4
+        },
+        {
+          "id": "caption-5",
+          "assetId": "text-caption",
+          "name": "GET RICH IN\n5 SECONDS?",
+          "kind": "text",
+          "transform": {
+            "x": 62,
+            "y": 175,
+            "width": 956,
+            "height": 230,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 20,
+          "text": "GET RICH IN\n5 SECONDS?",
+          "fontFamily": "Arial",
+          "fontSize": 86,
+          "fontStyle": "bold",
+          "textAlign": "center",
+          "textColor": "#ffffff",
+          "outlineWidth": 9
+        }
+      ],
+      "cameraKeyframes": [
+        {
+          "time": 0,
+          "easing": "smooth",
+          "camera": {
+            "x": 0,
+            "y": 0,
+            "zoom": 1,
+            "rotation": 0
+          }
+        },
+        {
+          "time": 2.2,
+          "easing": "smooth",
+          "camera": {
+            "x": 20,
+            "y": 70,
+            "zoom": 1.12,
+            "rotation": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "shot-12",
+      "name": "02 - One sip",
+      "duration": 1.4,
+      "transition": "dip-black",
+      "transitionDuration": 0.25,
+      "camera": {
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+        "rotation": 0
+      },
+      "objects": [
+        {
+          "id": "background-9",
+          "assetId": "bg-lab",
+          "name": "bg-lab",
+          "kind": "background",
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "width": 1080,
+            "height": 1920,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": true,
+          "hidden": false,
+          "layer": 0,
+          "atmosphere": "lights"
+        },
+        {
+          "id": "actor-7",
+          "assetId": "char-young-man",
+          "name": "Alex",
+          "kind": "character",
+          "transform": {
+            "x": 260,
+            "y": 850,
+            "width": 440,
+            "height": 730,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 5,
+          "appearance": {
+            "outfit": "casual",
+            "hair": "short",
+            "clothingColor": "#72a9ca"
+          },
+          "expression": "happy",
+          "action": "talking",
+          "pose": "palms-up",
+          "mouth": "auto",
+          "view": "front",
+          "closet": [],
+          "keyframes": [
+            {
+              "time": 0,
+              "easing": "smooth",
+              "transform": {
+                "x": 260,
+                "y": 850,
+                "width": 440,
+                "height": 730,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              },
+              "action": "talking",
+              "expression": "happy",
+              "pose": "palms-up",
+              "mouth": "auto",
+              "view": "front"
+            },
+            {
+              "time": 0.65,
+              "easing": "smooth",
+              "transform": {
+                "x": 260,
+                "y": 850,
+                "width": 440,
+                "height": 730,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": -7,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              },
+              "action": "talking",
+              "expression": "happy",
+              "pose": "palms-up",
+              "mouth": "auto",
+              "view": "front"
+            },
+            {
+              "time": 1.3,
+              "easing": "smooth",
+              "transform": {
+                "x": 260,
+                "y": 850,
+                "width": 440,
+                "height": 730,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              },
+              "action": "idle",
+              "expression": "shocked",
+              "pose": "palms-up",
+              "mouth": "auto",
+              "view": "front"
+            }
+          ]
+        },
+        {
+          "id": "prop-8",
+          "assetId": "prop-lab-bottle",
+          "name": "prop-lab-bottle",
+          "kind": "prop",
+          "transform": {
+            "x": 580,
+            "y": 930,
+            "width": 220,
+            "height": 310,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 6,
+          "keyframes": [
+            {
+              "time": 0,
+              "easing": "smooth",
+              "transform": {
+                "x": 580,
+                "y": 930,
+                "width": 220,
+                "height": 310,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              }
+            },
+            {
+              "time": 0.55,
+              "easing": "smooth",
+              "transform": {
+                "x": 500,
+                "y": 765,
+                "width": 220,
+                "height": 310,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": -30,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              }
+            },
+            {
+              "time": 1.3,
+              "easing": "smooth",
+              "transform": {
+                "x": 580,
+                "y": 930,
+                "width": 220,
+                "height": 310,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              }
+            }
+          ]
+        },
+        {
+          "id": "effect-10",
+          "assetId": "effect-glow",
+          "name": "effect-glow",
+          "kind": "effect",
+          "transform": {
+            "x": 470,
+            "y": 870,
+            "width": 400,
+            "height": 430,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 4
+        },
+        {
+          "id": "caption-11",
+          "assetId": "text-caption",
+          "name": "ONE SIP.",
+          "kind": "text",
+          "transform": {
+            "x": 62,
+            "y": 240,
+            "width": 956,
+            "height": 230,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 20,
+          "text": "ONE SIP.",
+          "fontFamily": "Arial",
+          "fontSize": 116,
+          "fontStyle": "bold",
+          "textAlign": "center",
+          "textColor": "#ffffff",
+          "outlineWidth": 9
+        }
+      ],
+      "cameraKeyframes": [
+        {
+          "time": 0,
+          "easing": "smooth",
+          "camera": {
+            "x": 0,
+            "y": 70,
+            "zoom": 1.16,
+            "rotation": 0
+          }
+        },
+        {
+          "time": 1.4,
+          "easing": "smooth",
+          "camera": {
+            "x": 35,
+            "y": 115,
+            "zoom": 1.42,
+            "rotation": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "shot-15",
+      "name": "03 - Five seconds later",
+      "duration": 0.85,
+      "transition": "wipe",
+      "transitionDuration": 0.3,
+      "camera": {
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+        "rotation": 0
+      },
+      "objects": [
+        {
+          "id": "background-13",
+          "assetId": "bg-time-card",
+          "name": "bg-time-card",
+          "kind": "background",
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "width": 1080,
+            "height": 1920,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": true,
+          "hidden": false,
+          "layer": 0
+        },
+        {
+          "id": "caption-14",
+          "assetId": "text-caption",
+          "name": "5 SECONDS\nLATER...",
+          "kind": "text",
+          "transform": {
+            "x": 62,
+            "y": 685,
+            "width": 956,
+            "height": 230,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 20,
+          "text": "5 SECONDS\nLATER...",
+          "fontFamily": "Arial",
+          "fontSize": 98,
+          "fontStyle": "bold",
+          "textAlign": "center",
+          "textColor": "#ffffff",
+          "outlineWidth": 9
+        }
+      ]
+    },
+    {
+      "id": "shot-22",
+      "name": "04 - It worked",
+      "duration": 2,
+      "transition": "slide",
+      "transitionDuration": 0.35,
+      "camera": {
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+        "rotation": 0
+      },
+      "objects": [
+        {
+          "id": "background-19",
+          "assetId": "bg-office",
+          "name": "bg-office",
+          "kind": "background",
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "width": 1080,
+            "height": 1920,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": true,
+          "hidden": false,
+          "layer": 0,
+          "atmosphere": "lights"
+        },
+        {
+          "id": "actor-16",
+          "assetId": "char-young-man",
+          "name": "Alex",
+          "kind": "character",
+          "transform": {
+            "x": 320,
+            "y": 820,
+            "width": 440,
+            "height": 730,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 5,
+          "appearance": {
+            "outfit": "luxury",
+            "hair": "short",
+            "clothingColor": "#353c52"
+          },
+          "expression": "happy",
+          "action": "waving",
+          "pose": "palms-up",
+          "mouth": "auto",
+          "view": "front",
+          "closet": [
+            "glasses"
+          ],
+          "keyframes": [
+            {
+              "time": 0,
+              "easing": "smooth",
+              "transform": {
+                "x": 320,
+                "y": 900,
+                "width": 440,
+                "height": 730,
+                "scaleX": 0.84,
+                "scaleY": 0.84,
+                "rotation": 0,
+                "opacity": 0,
+                "flipX": false,
+                "flipY": false
+              },
+              "action": "waving",
+              "expression": "happy",
+              "pose": "palms-up",
+              "mouth": "auto",
+              "view": "front"
+            },
+            {
+              "time": 0.42,
+              "easing": "smooth",
+              "transform": {
+                "x": 320,
+                "y": 820,
+                "width": 440,
+                "height": 730,
+                "scaleX": 1.05,
+                "scaleY": 1.05,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              },
+              "action": "waving",
+              "expression": "happy",
+              "pose": "palms-up",
+              "mouth": "auto",
+              "view": "front"
+            },
+            {
+              "time": 1.9,
+              "easing": "smooth",
+              "transform": {
+                "x": 320,
+                "y": 820,
+                "width": 440,
+                "height": 730,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              },
+              "action": "idle",
+              "expression": "happy",
+              "pose": "palms-up",
+              "mouth": "auto",
+              "view": "front"
+            }
+          ]
+        },
+        {
+          "id": "prop-17",
+          "assetId": "prop-money",
+          "name": "prop-money",
+          "kind": "prop",
+          "transform": {
+            "x": 90,
+            "y": 1290,
+            "width": 300,
+            "height": 220,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 8,
+          "keyframes": [
+            {
+              "time": 0,
+              "easing": "smooth",
+              "transform": {
+                "x": 90,
+                "y": 1500,
+                "width": 300,
+                "height": 220,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 0,
+                "flipX": false,
+                "flipY": false
+              }
+            },
+            {
+              "time": 0.7,
+              "easing": "smooth",
+              "transform": {
+                "x": 90,
+                "y": 1290,
+                "width": 300,
+                "height": 220,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              }
+            }
+          ]
+        },
+        {
+          "id": "prop-18",
+          "assetId": "prop-money",
+          "name": "prop-money",
+          "kind": "prop",
+          "transform": {
+            "x": 700,
+            "y": 1220,
+            "width": 280,
+            "height": 210,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 8,
+          "keyframes": [
+            {
+              "time": 0,
+              "easing": "smooth",
+              "transform": {
+                "x": 700,
+                "y": 1450,
+                "width": 280,
+                "height": 210,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 0,
+                "flipX": false,
+                "flipY": false
+              }
+            },
+            {
+              "time": 0.8,
+              "easing": "smooth",
+              "transform": {
+                "x": 700,
+                "y": 1220,
+                "width": 280,
+                "height": 210,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              }
+            }
+          ]
+        },
+        {
+          "id": "effect-20",
+          "assetId": "effect-burst",
+          "name": "effect-burst",
+          "kind": "effect",
+          "transform": {
+            "x": 340,
+            "y": 450,
+            "width": 420,
+            "height": 420,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 2
+        },
+        {
+          "id": "caption-21",
+          "assetId": "text-caption",
+          "name": "IT WORKED?!",
+          "kind": "text",
+          "transform": {
+            "x": 62,
+            "y": 210,
+            "width": 956,
+            "height": 230,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 20,
+          "text": "IT WORKED?!",
+          "fontFamily": "Arial",
+          "fontSize": 104,
+          "fontStyle": "bold",
+          "textAlign": "center",
+          "textColor": "#ffffff",
+          "outlineWidth": 9
+        }
+      ],
+      "cameraKeyframes": [
+        {
+          "time": 0,
+          "easing": "smooth",
+          "camera": {
+            "x": 0,
+            "y": 0,
+            "zoom": 1.04,
+            "rotation": 0
+          }
+        },
+        {
+          "time": 2,
+          "easing": "smooth",
+          "camera": {
+            "x": 0,
+            "y": 45,
+            "zoom": 1.18,
+            "rotation": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "shot-26",
+      "name": "05 - Bank alert",
+      "duration": 1.5,
+      "transition": "cut",
+      "transitionDuration": 0.1,
+      "camera": {
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+        "rotation": 0
+      },
+      "objects": [
+        {
+          "id": "background-24",
+          "assetId": "bg-office",
+          "name": "bg-office",
+          "kind": "background",
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "width": 1080,
+            "height": 1920,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": true,
+          "hidden": false,
+          "layer": 0
+        },
+        {
+          "id": "prop-23",
+          "assetId": "prop-phone",
+          "name": "prop-phone",
+          "kind": "prop",
+          "transform": {
+            "x": 265,
+            "y": 700,
+            "width": 550,
+            "height": 760,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 4,
+          "screen": {
+            "mode": "notification",
+            "brand": "NOVA BANK",
+            "title": "Payment alert",
+            "body": "Potion plan: $999.99",
+            "accent": "#cc6252",
+            "graphValues": [
+              24,
+              42,
+              34,
+              68,
+              54,
+              82
+            ]
+          },
+          "keyframes": [
+            {
+              "time": 0,
+              "easing": "smooth",
+              "transform": {
+                "x": 265,
+                "y": 1080,
+                "width": 550,
+                "height": 760,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 0,
+                "flipX": false,
+                "flipY": false
+              }
+            },
+            {
+              "time": 0.25,
+              "easing": "smooth",
+              "transform": {
+                "x": 265,
+                "y": 700,
+                "width": 550,
+                "height": 760,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              }
+            },
+            {
+              "time": 1.4,
+              "easing": "smooth",
+              "transform": {
+                "x": 265,
+                "y": 700,
+                "width": 550,
+                "height": 760,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              }
+            }
+          ]
+        },
+        {
+          "id": "caption-25",
+          "assetId": "text-caption",
+          "name": "BANK ALERT",
+          "kind": "text",
+          "transform": {
+            "x": 62,
+            "y": 400,
+            "width": 956,
+            "height": 230,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 20,
+          "text": "BANK ALERT",
+          "fontFamily": "Arial",
+          "fontSize": 104,
+          "fontStyle": "bold",
+          "textAlign": "center",
+          "textColor": "#ffffff",
+          "outlineWidth": 9
+        }
+      ],
+      "cameraKeyframes": [
+        {
+          "time": 0,
+          "easing": "smooth",
+          "camera": {
+            "x": 0,
+            "y": 0,
+            "zoom": 1,
+            "rotation": 0
+          }
+        },
+        {
+          "time": 1.5,
+          "easing": "smooth",
+          "camera": {
+            "x": 0,
+            "y": 0,
+            "zoom": 1.12,
+            "rotation": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "shot-31",
+      "name": "06 - The bill",
+      "duration": 2.1,
+      "transition": "crossfade",
+      "transitionDuration": 0.3,
+      "camera": {
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+        "rotation": 0
+      },
+      "objects": [
+        {
+          "id": "background-28",
+          "assetId": "bg-office",
+          "name": "bg-office",
+          "kind": "background",
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "width": 1080,
+            "height": 1920,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": true,
+          "hidden": false,
+          "layer": 0,
+          "timeOfDay": "night",
+          "atmosphere": "rain"
+        },
+        {
+          "id": "actor-27",
+          "assetId": "char-young-man",
+          "name": "Alex",
+          "kind": "character",
+          "transform": {
+            "x": 305,
+            "y": 830,
+            "width": 440,
+            "height": 730,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 5,
+          "appearance": {
+            "outfit": "worn",
+            "hair": "short",
+            "clothingColor": "#889184"
+          },
+          "expression": "sad",
+          "action": "looking-down",
+          "pose": "arms-down",
+          "mouth": "auto",
+          "view": "front",
+          "closet": [],
+          "keyframes": [
+            {
+              "time": 0,
+              "easing": "smooth",
+              "transform": {
+                "x": 305,
+                "y": 810,
+                "width": 440,
+                "height": 730,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 0,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              },
+              "action": "idle",
+              "expression": "shocked",
+              "pose": "arms-down",
+              "mouth": "auto",
+              "view": "front"
+            },
+            {
+              "time": 0.55,
+              "easing": "smooth",
+              "transform": {
+                "x": 305,
+                "y": 880,
+                "width": 440,
+                "height": 730,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 5,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              },
+              "action": "looking-down",
+              "expression": "sad",
+              "pose": "arms-down",
+              "mouth": "auto",
+              "view": "front"
+            },
+            {
+              "time": 1.8,
+              "easing": "smooth",
+              "transform": {
+                "x": 305,
+                "y": 880,
+                "width": 440,
+                "height": 730,
+                "scaleX": 1,
+                "scaleY": 1,
+                "rotation": 5,
+                "opacity": 1,
+                "flipX": false,
+                "flipY": false
+              },
+              "action": "idle",
+              "expression": "sad",
+              "pose": "arms-down",
+              "mouth": "auto",
+              "view": "front"
+            }
+          ]
+        },
+        {
+          "id": "caption-29",
+          "assetId": "text-caption",
+          "name": "BALANCE:\n-$999.99",
+          "kind": "text",
+          "transform": {
+            "x": 62,
+            "y": 235,
+            "width": 956,
+            "height": 230,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 20,
+          "text": "BALANCE:\n-$999.99",
+          "fontFamily": "Arial",
+          "fontSize": 98,
+          "fontStyle": "bold",
+          "textAlign": "center",
+          "textColor": "#ffdd91",
+          "outlineWidth": 9
+        },
+        {
+          "id": "effect-30",
+          "assetId": "effect-question",
+          "name": "effect-question",
+          "kind": "effect",
+          "transform": {
+            "x": 680,
+            "y": 720,
+            "width": 220,
+            "height": 240,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 7
+        }
+      ],
+      "cameraKeyframes": [
+        {
+          "time": 0,
+          "easing": "smooth",
+          "camera": {
+            "x": 0,
+            "y": 0,
+            "zoom": 1.1,
+            "rotation": 0
+          }
+        },
+        {
+          "time": 2.1,
+          "easing": "smooth",
+          "camera": {
+            "x": 0,
+            "y": 80,
+            "zoom": 1.29,
+            "rotation": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "shot-36",
+      "name": "07 - The punchline",
+      "duration": 1.6,
+      "transition": "cut",
+      "transitionDuration": 0.1,
+      "camera": {
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+        "rotation": 0
+      },
+      "objects": [
+        {
+          "id": "background-33",
+          "assetId": "bg-time-card",
+          "name": "bg-time-card",
+          "kind": "background",
+          "transform": {
+            "x": 0,
+            "y": 0,
+            "width": 1080,
+            "height": 1920,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": true,
+          "hidden": false,
+          "layer": 0
+        },
+        {
+          "id": "actor-32",
+          "assetId": "char-young-man",
+          "name": "Alex",
+          "kind": "character",
+          "transform": {
+            "x": 300,
+            "y": 900,
+            "width": 440,
+            "height": 730,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 5,
+          "appearance": {
+            "outfit": "worn",
+            "hair": "short",
+            "clothingColor": "#889184"
+          },
+          "expression": "sad",
+          "action": "idle",
+          "pose": "arms-down",
+          "mouth": "auto",
+          "view": "front",
+          "closet": []
+        },
+        {
+          "id": "caption-34",
+          "assetId": "text-caption",
+          "name": "FREE TRIAL\nEXPIRED.",
+          "kind": "text",
+          "transform": {
+            "x": 62,
+            "y": 310,
+            "width": 956,
+            "height": 230,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 20,
+          "text": "FREE TRIAL\nEXPIRED.",
+          "fontFamily": "Arial",
+          "fontSize": 105,
+          "fontStyle": "bold",
+          "textAlign": "center",
+          "textColor": "#ffffff",
+          "outlineWidth": 9
+        },
+        {
+          "id": "caption-35",
+          "assetId": "text-caption",
+          "name": "PART 2: CANCELING IT",
+          "kind": "text",
+          "transform": {
+            "x": 62,
+            "y": 1450,
+            "width": 956,
+            "height": 230,
+            "scaleX": 1,
+            "scaleY": 1,
+            "rotation": 0,
+            "opacity": 1,
+            "flipX": false,
+            "flipY": false
+          },
+          "locked": false,
+          "hidden": false,
+          "layer": 20,
+          "text": "PART 2: CANCELING IT",
+          "fontFamily": "Arial",
+          "fontSize": 55,
+          "fontStyle": "bold",
+          "textAlign": "center",
+          "textColor": "#b8e0c8",
+          "outlineWidth": 9
+        }
+      ],
+      "cameraKeyframes": [
+        {
+          "time": 0,
+          "easing": "smooth",
+          "camera": {
+            "x": 0,
+            "y": 0,
+            "zoom": 1,
+            "rotation": 0
+          }
+        },
+        {
+          "time": 1.6,
+          "easing": "smooth",
+          "camera": {
+            "x": 0,
+            "y": 0,
+            "zoom": 1.08,
+            "rotation": 0
+          }
+        }
+      ]
+    }
+  ],
+  "activeShotId": "shot-6",
+  "audioClips": [
+    {
+      "id": "audio-38",
+      "name": "Comedy Quirky Sneaky Music",
+      "source": "/sound-fx/Comedy%20Quirky%20Sneaky%20Music.mp3",
+      "sourceDuration": 81.266938,
+      "start": 0,
+      "trimStart": 0,
+      "duration": 11.65,
+      "volume": 0.17,
+      "muted": false
+    },
+    {
+      "id": "audio-39",
+      "name": "Sound Effect TwinkleSparkle",
+      "source": "/sound-fx/Sound%20Effect%20TwinkleSparkle.mp3",
+      "sourceDuration": 2.037531,
+      "start": 0.72,
+      "trimStart": 0,
+      "duration": 1.3,
+      "volume": 0.36,
+      "muted": false
+    },
+    {
+      "id": "audio-40",
+      "name": "Simple Whoosh",
+      "source": "/sound-fx/Simple%20Whoosh.mp3",
+      "sourceDuration": 0.574688,
+      "start": 2.2,
+      "trimStart": 0,
+      "duration": 0.574688,
+      "volume": 0.5,
+      "muted": false
+    },
+    {
+      "id": "audio-41",
+      "name": "microwave-ding",
+      "source": "/sound-fx/microwave-ding.mp3",
+      "sourceDuration": 1.128,
+      "start": 3.68,
+      "trimStart": 0,
+      "duration": 0.6,
+      "volume": 0.45,
+      "muted": false
+    },
+    {
+      "id": "audio-42",
+      "name": "pop",
+      "source": "/sound-fx/pop.mp3",
+      "sourceDuration": 0.72,
+      "start": 4.52,
+      "trimStart": 0,
+      "duration": 0.45,
+      "volume": 0.55,
+      "muted": false
+    },
+    {
+      "id": "audio-43",
+      "name": "record_scratch",
+      "source": "/sound-fx/record_scratch.mp3",
+      "sourceDuration": 1.656,
+      "start": 6.65,
+      "trimStart": 0,
+      "duration": 1,
+      "volume": 0.65,
+      "muted": false
+    },
+    {
+      "id": "audio-44",
+      "name": "buzzer-or-wrong-answer-",
+      "source": "/sound-fx/buzzer-or-wrong-answer-.mp3",
+      "sourceDuration": 1.776,
+      "start": 7.85,
+      "trimStart": 0,
+      "duration": 0.7,
+      "volume": 0.55,
+      "muted": false
+    },
+    {
+      "id": "audio-45",
+      "name": "cricket-sound",
+      "source": "/sound-fx/cricket-sound.mp3",
+      "sourceDuration": 9.612,
+      "start": 9.45,
+      "trimStart": 0,
+      "duration": 1.2,
+      "volume": 0.3,
+      "muted": false
+    },
+    {
+      "id": "audio-46",
+      "name": "vine boom",
+      "source": "/sound-fx/vine%20boom.mp3",
+      "sourceDuration": 1.306094,
+      "start": 10.28,
+      "trimStart": 0,
+      "duration": 0.8,
+      "volume": 0.4,
+      "muted": false
+    }
+  ]
+}

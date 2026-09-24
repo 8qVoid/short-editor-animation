@@ -5,6 +5,7 @@ import { BackgroundArt } from "./BackgroundArt";
 import { appearanceFor, Hair, Outfit } from "./CharacterWardrobe";
 import { MouthShape } from "./CharacterMouth";
 import { AngledCharacterArt } from "./AngledCharacterArt";
+import { EditableDisplayArt } from "./EditableDisplayArt";
 
 interface ArtProps {
   asset: Asset;
@@ -230,5 +231,6 @@ export function AssetArt(props: ArtProps) {
   if (props.asset.id === "bg-time-card") return <Group><Rect width={props.object.transform.width} height={props.object.transform.height} fill="#244f50"/>{Array.from({length:8},(_,i)=><Line key={i} points={[0,props.object.transform.height*i/7,props.object.transform.width,props.object.transform.height*(i+.5)/7]} stroke="#8dc2ae" strokeWidth={3} opacity={.16}/>)}</Group>;
   if (props.asset.kind === "character") return <CharacterArt {...props} />;
   if (props.asset.kind === "background") return <BackgroundArt {...props} />;
+  if (["prop-phone", "prop-laptop", "prop-brand-sign"].includes(props.asset.id)) return <EditableDisplayArt object={props.object} />;
   return <PropArt {...props} />;
 }

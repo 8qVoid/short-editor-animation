@@ -188,6 +188,11 @@ button {
 }
 
 .import-background-row { display: grid; gap: 6px; margin: 0 0 10px; }
+.screen-controls { margin: 12px 0 16px; }
+.screen-controls .field { min-width: 0; }
+.screen-controls .field input:not([type="color"]), .screen-controls .field textarea { width: 100%; min-width: 0; }
+.screen-image-actions { display: flex; gap: 8px; margin-top: 10px; }
+.screen-image-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 34px; padding: 0 10px; color: #26343a; background: #fff; border: 1px solid #d0c8bc; border-radius: 7px; }
 .import-background-row button,
 .sound-shelf-heading button {
   min-height: 36px;

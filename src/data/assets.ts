@@ -39,6 +39,7 @@ export const assets: Asset[] = [
   { id: "bg-park", name: "Park", category: "Backgrounds", kind: "background", tags: ["park", "tree", "bench", "outside"], color: "#b7c6aa", accent: "#6f8b5a", thumbnail: "park" },
   { id: "bg-night", name: "Night Street", category: "Backgrounds", kind: "background", tags: ["night", "street", "dramatic"], color: "#38414a", accent: "#e4b649", thumbnail: "street" },
   { id: "prop-phone", name: "Phone", category: "Props", kind: "prop", tags: ["phone", "tech", "holding"], color: "#2d3440", accent: "#71b9d6", thumbnail: "phone" },
+  { id: "prop-brand-sign", name: "Brand Sign", category: "Props", kind: "prop", tags: ["brand", "logo", "store", "editable", "sign", "display"], color: "#eef5f2", accent: "#27827b", thumbnail: "brand-sign" },
   { id: "prop-money", name: "Money Stack", category: "Props", kind: "prop", tags: ["money", "cash", "finance"], color: "#7cb783", accent: "#e7e2b0", thumbnail: "money" },
   { id: "prop-laptop", name: "Laptop", category: "Props", kind: "prop", tags: ["office", "computer", "work"], color: "#5d6870", accent: "#b6d5db", thumbnail: "laptop" },
   { id: "prop-chart", name: "Chart Board", category: "Props", kind: "prop", tags: ["chart", "money", "explain"], color: "#f0eee2", accent: "#d15b4a", thumbnail: "chart" },

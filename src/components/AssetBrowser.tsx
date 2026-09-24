@@ -11,15 +11,17 @@ import type { Asset, AssetCategory, CaptionCue, SceneObject, SoundAsset } from "
 const BackgroundPreview = memo(function BackgroundPreview({ asset }: { asset: Asset }) {
   const ref=useRef<HTMLDivElement>(null);
   const [size,setSize]=useState(76);
-  useEffect(()=>{const el=ref.current;if(!el)return;const observer=new ResizeObserver(()=>setSize(el.clientWidth));observer.observe(el);return()=>observer.disconnect();},[]);
+  useEffect(()=>{const el=ref.current;if(!el)return;const observer=new ResizeObserver(()=>setSize(Math.max(1,el.clientWidth)));observer.observe(el);return()=>observer.disconnect();},[]);
   const object: SceneObject = {
     id: "preview", assetId: asset.id, name: asset.name, kind: asset.kind,
     locked: true, hidden: false, layer: 0,
     transform: { x: 0, y: 0, width: 43, height: 76, scaleX: 1, scaleY: 1, rotation: 0, opacity: 1, flipX: false, flipY: false },
   };
   const large = asset.kind !== "character" && asset.kind !== "background";
-  const scale=large?Math.min(size/260,76/220)*.9:1;
-  return <div ref={ref} style={{ pointerEvents: "none",width:'100%',minWidth:0 }} aria-hidden="true"><Stage width={size} height={76}><Layer listening={false}><Group x={large?(size-260*scale)/2:(size-43)/2} y={large?(76-220*scale)/2:0} scaleX={scale} scaleY={scale}><AssetArt asset={asset} object={large?{...object,transform:{...object.transform,width:260,height:220}}:object} />{asset.kind==='background'&&<SceneLighting object={object} width={43} height={76}/>}</Group></Layer></Stage></div>;
+  const previewWidth = asset.id === "prop-phone" ? 120 : 260;
+  const previewHeight = asset.id === "prop-phone" ? 210 : asset.id === "prop-laptop" || asset.id === "prop-brand-sign" ? 180 : 220;
+  const scale=large?Math.min(size/previewWidth,76/previewHeight)*.9:1;
+  return <div ref={ref} style={{ pointerEvents: "none",width:'100%',minWidth:0 }} aria-hidden="true"><Stage width={size} height={76}><Layer listening={false}><Group x={large?(size-previewWidth*scale)/2:(size-43)/2} y={large?(76-previewHeight*scale)/2:0} scaleX={scale} scaleY={scale}><AssetArt asset={asset} object={large?{...object,transform:{...object.transform,width:previewWidth,height:previewHeight}}:object} />{asset.kind==='background'&&<SceneLighting object={object} width={43} height={76}/>}</Group></Layer></Stage></div>;
 });
 
 const categories: AssetCategory[] = ["Characters", "Backgrounds", "Props", "Shapes", "Effects", "Sound FX", "Text"];

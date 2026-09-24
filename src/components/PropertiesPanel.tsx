@@ -8,6 +8,7 @@ import { objectAt } from "../animation";
 import { MotionPanel } from "./MotionPanel";
 import { ShotPanel } from "./ShotPanel";
 import { ProjectSyncPanel } from "./ProjectSyncPanel";
+import { ScreenControls } from "./ScreenControls";
 
 export function PropertiesPanel() {
   const { project, selectedIds, updateObject, updateObjectTransform, deleteSelected, duplicateSelected } = useEditorStore();
@@ -68,6 +69,7 @@ export function PropertiesPanel() {
           <label className="field"><span>Edge Softness {object.chromaKeySoftness ?? 45}</span><input aria-label="Chroma key edge softness" type="range" min={1} max={150} value={object.chromaKeySoftness ?? 45} onChange={event => updateObject(object.id, { chromaKeySoftness: Number(event.target.value) })} /></label>
         </div>}
       </>}
+      {["prop-phone", "prop-laptop", "prop-brand-sign"].includes(object.assetId) && <ScreenControls key={object.id} object={object} update={patch => updateObject(object.id, patch)} />}
       <div className="fields">
         {numeric("x", "X")}
         {numeric("y", "Y")}

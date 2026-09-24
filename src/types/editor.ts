@@ -4,7 +4,8 @@ export type AssetCategory =
   | "Props"
   | "Shapes"
   | "Effects"
-  | "Text";
+  | "Text"
+  | "Sound FX";
 
 export type AssetKind =
   | "character"
@@ -12,7 +13,8 @@ export type AssetKind =
   | "prop"
   | "shape"
   | "effect"
-  | "text";
+  | "text"
+  | "audio";
 
 export interface Asset {
   appearance?: CharacterAppearance;
@@ -24,6 +26,9 @@ export interface Asset {
   color?: string;
   accent?: string;
   thumbnail: string;
+  imageData?: string;
+  imageWidth?: number;
+  imageHeight?: number;
 }
 
 export interface Transform {
@@ -59,6 +64,18 @@ export interface SceneObject {
   view?: CharacterViewId;
   closet?: ClosetItemId[];
   text?: string;
+  fontFamily?: string;
+  fontSize?: number;
+  fontStyle?: "normal" | "bold" | "italic" | "bold italic";
+  textAlign?: "left" | "center" | "right";
+  textColor?: string;
+  outlineWidth?: number;
+  chromaKeyEnabled?: boolean;
+  chromaKeyColor?: string;
+  chromaKeyTolerance?: number;
+  chromaKeySoftness?: number;
+  visibleFrom?: number;
+  visibleUntil?: number;
 }
 
 export type ExpressionId =
@@ -132,11 +149,13 @@ export interface Shot {
   id: string;
   name: string;
   duration: number;
-  transition?: "cut" | "crossfade";
+  transition?: ShotTransitionId;
   transitionDuration?: number;
   objects: SceneObject[];
   camera: Camera;
 }
+
+export type ShotTransitionId = "cut" | "crossfade" | "wipe" | "slide" | "zoom" | "dip-black";
 
 export type Easing = "linear" | "smooth" | "hold";
 export interface ObjectKeyframe {
@@ -153,6 +172,8 @@ export interface CameraKeyframe { time: number; camera: Camera; easing: Easing }
 
 export interface Project {
   audioClips?: AudioClip[];
+  customAssets?: Asset[];
+  soundAssets?: SoundAsset[];
   id: string;
   name: string;
   canvas: {
@@ -183,4 +204,17 @@ export interface AudioClip {
   duration: number;
   volume: number;
   muted: boolean;
+}
+
+export interface SoundAsset {
+  id: string;
+  name: string;
+  source: string;
+  sourceDuration: number;
+}
+
+export interface CaptionCue {
+  start: number;
+  end: number;
+  text: string;
 }

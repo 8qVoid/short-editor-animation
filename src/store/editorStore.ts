@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { assets } from "../data/assets";
-import type { Asset, AudioClip, Project, SceneObject, Shot, Transform } from "../types/editor";
+import type { Asset, AudioClip, CaptionCue, Project, SceneObject, Shot, ShotTransitionId, SoundAsset, Transform } from "../types/editor";
 import { readAutosave, writeAutosave } from "./projectStorage";
 import { cameraAt, cameraKeys, insertKey, motionKeys, objectAt, snapshot, type MotionPreset } from "../animation";
 import type { Camera, Easing } from "../types/editor";
@@ -84,6 +84,12 @@ interface EditorState {
   reorderObject: (id: string, direction: number) => void;
   saveError?: string;
   addAudio: (clip: AudioClip) => void;
+  addSoundAsset: (asset: SoundAsset) => void;
+  deleteSoundAsset: (id: string) => void;
+  addSoundToTimeline: (asset: SoundAsset) => void;
+  addCaptionCues: (cues: CaptionCue[]) => void;
+  addCustomAsset: (asset: Asset) => void;
+  deleteCustomAsset: (id: string) => void;
   updateAudio: (id: string, patch: Partial<AudioClip>) => void;
   deleteAudio: (id: string) => void;
   playhead: number;
@@ -111,9 +117,9 @@ interface EditorState {
   deleteSelected: () => void;
   duplicateSelected: () => void;
   setShotDuration: (duration: number) => void;
-  setShotTransition: (id: string, transition: "cut" | "crossfade", duration?: number) => void;
+  setShotTransition: (id: string, transition: ShotTransitionId, duration?: number) => void;
   addShot: () => void;
-  duplicateShot: () => void;
+  duplicateShot: (shotId?: string) => void;
   deleteShot: (shotId: string) => void;
   setActiveShot: (shotId: string) => void;
   saveProjectFile: () => void;
@@ -271,6 +277,46 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     if (end > total) shots[shots.length - 1] = { ...shots[shots.length - 1], duration: shots[shots.length - 1].duration + Math.ceil((end - total) * state.project.canvas.fps) / state.project.canvas.fps };
     return withHistory(state, { ...state.project, shots, audioClips: [...state.project.audioClips ?? [], clip] });
   }),
+  addSoundAsset: asset => set(state => withHistory(state, { ...state.project, soundAssets: [...state.project.soundAssets ?? [], asset] })),
+  deleteSoundAsset: id => set(state => withHistory(state, { ...state.project, soundAssets: (state.project.soundAssets ?? []).filter(asset => asset.id !== id) })),
+  addSoundToTimeline: asset => {
+    const state = get();
+    const clip: AudioClip = { id: projectId(), name: asset.name, source: asset.source, sourceDuration: asset.sourceDuration, start: state.playhead, trimStart: 0, duration: asset.sourceDuration, volume: 1, muted: false };
+    get().addAudio(clip);
+  },
+  addCaptionCues: cues => set(state => {
+    if (!cues.length) return {};
+    const width = state.project.canvas.width;
+    const height = state.project.canvas.height;
+    let shotStart = 0;
+    let sequence = 0;
+    const shots = state.project.shots.map(shot => {
+      const objects = [...shot.objects];
+      for (const cue of cues) {
+        const from = Math.max(cue.start, shotStart);
+        const until = Math.min(cue.end, shotStart + shot.duration);
+        if (until <= from) continue;
+        sequence += 1;
+        const offset = shot.animationOffset ?? 0;
+        objects.push({
+          id: projectId(), assetId: "text-caption", name: `Subtitle ${sequence}`, kind: "text",
+          transform: baseTransform(width * .08, height * .78, width * .84, height * .12),
+          locked: false, hidden: false, layer: objects.length, text: cue.text,
+          fontFamily: "Arial", fontSize: Math.round(width * .052), fontStyle: "bold", textAlign: "center",
+          textColor: "#ffffff", outlineWidth: Math.max(3, Math.round(width * .004)),
+          visibleFrom: offset + from - shotStart, visibleUntil: offset + until - shotStart
+        });
+      }
+      shotStart += shot.duration;
+      return { ...shot, objects };
+    });
+    return { ...withHistory(state, { ...state.project, shots }), selectedIds: [] };
+  }),
+  addCustomAsset: asset => set(state => withHistory(state, { ...state.project, customAssets: [...state.project.customAssets ?? [], asset] })),
+  deleteCustomAsset: id => set(state => {
+    if (state.project.shots.some(shot => shot.objects.some(object => object.assetId === id))) return {};
+    return withHistory(state, { ...state.project, customAssets: (state.project.customAssets ?? []).filter(asset => asset.id !== id) });
+  }),
   updateAudio: (id, patch) => set(state => {
     const audioClips = (state.project.audioClips ?? []).map(clip => {
       if (clip.id !== id) return clip;
@@ -379,8 +425,10 @@ export const useEditorStore = create<EditorState>((set, get) => ({
           ? { x: 0, y: 0, width: state.project.canvas.width, height: state.project.canvas.height }
           : asset.kind === "text"
             ? { x, y, width: 520, height: 120 }
-            : asset.kind === "character"
+          : asset.kind === "character"
               ? { x, y, width: 380, height: 690 }
+              : asset.imageWidth && asset.imageHeight
+                ? (() => { const scale = Math.min(600 / asset.imageWidth, 760 / asset.imageHeight); return { x, y, width: asset.imageWidth * scale, height: asset.imageHeight * scale }; })()
               : { x, y, width: 260, height: 220 };
       const object: SceneObject = {
         id: projectId(),
@@ -475,9 +523,10 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       shots.splice(shots.findIndex(s => s.id === state.project.activeShotId) + 1, 0, shot);
       return { ...withHistory(state, { ...state.project, shots, activeShotId: shot.id }), selectedIds: [] };
     }),
-  duplicateShot: () =>
+  duplicateShot: (shotId) =>
     set((state) => {
-      const source = activeShot(state.project);
+      const source = shotId ? state.project.shots.find(shot => shot.id === shotId) : activeShot(state.project);
+      if (!source) return {};
       const shot = clone(source);
       shot.id = projectId();
       shot.name = `${source.name} Copy`;

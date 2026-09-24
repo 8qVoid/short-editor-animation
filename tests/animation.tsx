@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import App from '../src/App';
 import { useEditorStore } from '../src/store/editorStore';
 import { assets } from '../src/data/assets';
+import Konva from 'konva';
 (window as any).editorStore = useEditorStore;
 (window as any).editorAssets = assets;
+(window as any).editorKonva = Konva;
 createRoot(document.getElementById('root')!).render(<App/>);

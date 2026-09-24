@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Diamond, Eye, EyeOff, Lock, Unlock } from "lucide-react";
+import { ArrowDown, ArrowUp, Diamond, Eye, EyeOff, Lock, Trash2, Unlock } from "lucide-react";
 import { useEditorStore } from "../store/editorStore";
 
 export function ObjectTracks() {
@@ -14,6 +14,7 @@ export function ObjectTracks() {
         <button title={o.locked?'Unlock layer':'Lock layer'} onClick={()=>s.updateObject(o.id,{locked:!o.locked})}>{o.locked?<Lock size={13}/>:<Unlock size={13}/>}</button>
         <button title="Bring forward" disabled={o.kind==='background'} onClick={()=>s.reorderObject(o.id,1)}><ArrowUp size={13}/></button>
         <button title="Send backward" disabled={o.kind==='background'} onClick={()=>s.reorderObject(o.id,-1)}><ArrowDown size={13}/></button>
+        <button className="track-delete" title={`Delete ${o.name}`} aria-label={`Delete ${o.name}`} onClick={()=>{s.selectObject(o.id);s.deleteSelected();}}><Trash2 size={13}/></button>
       </div>
       <div className="key-track" aria-label={`${o.name} keyframes`} onPointerDown={e=>{
         if(e.target!==e.currentTarget)return;

@@ -3,7 +3,7 @@ import { actions, characterViews, closetItems, expressions, mouths, poses } from
 import { useEditorStore } from "../store/editorStore";
 import { assetById } from "../data/assets";
 import { appearanceFor, hairstyles, outfits } from "./CharacterWardrobe";
-import type { CharacterAppearance, HairId, OutfitId } from "../types/editor";
+import type { CharacterAppearance, HairId, OutfitId, SceneObject } from "../types/editor";
 import { objectAt } from "../animation";
 import { MotionPanel } from "./MotionPanel";
 import { ShotPanel } from "./ShotPanel";
@@ -28,7 +28,8 @@ export function PropertiesPanel() {
   }
 
   const t = object.transform;
-  const appearance = appearanceFor(assetById(object.assetId)!, object);
+  const selectedAsset = project.customAssets?.find(asset => asset.id === object.assetId) ?? assetById(object.assetId) ?? assetById("char-young-man")!;
+  const appearance = appearanceFor(selectedAsset, object);
   const customize = (patch: CharacterAppearance) => updateObject(object.id, { appearance: { ...object.appearance, ...patch } });
   const numeric = (key: keyof typeof t, label: string, step = 1) => (
     <label className="field">
@@ -57,6 +58,15 @@ export function PropertiesPanel() {
         <div className="picker-grid" role="group" aria-label="Time of day">
           {(["day", "sunrise", "sunset", "night"] as const).map(time => <button key={time} aria-pressed={(object.timeOfDay ?? (object.assetId === "bg-night" ? "night" : "day")) === time} className={(object.timeOfDay ?? (object.assetId === "bg-night" ? "night" : "day")) === time ? "active" : ""} onClick={() => updateObject(object.id, { timeOfDay: time })}>{time.charAt(0).toUpperCase() + time.slice(1)}</button>)}
         </div>
+      </>}
+      {selectedAsset.imageData && <>
+        <div className="section-label">Background Removal</div>
+        <label className="chroma-toggle"><input type="checkbox" checked={object.chromaKeyEnabled ?? false} onChange={event => updateObject(object.id, { chromaKeyEnabled: event.target.checked, chromaKeyColor: object.chromaKeyColor ?? "#00ff00" })} /> Remove a solid color (chroma key)</label>
+        {object.chromaKeyEnabled && <div className="fields">
+          <label className="field"><span>Key Color</span><input aria-label="Chroma key color" type="color" value={object.chromaKeyColor ?? "#00ff00"} onChange={event => updateObject(object.id, { chromaKeyColor: event.target.value })} /></label>
+          <label className="field"><span>Tolerance {object.chromaKeyTolerance ?? 90}</span><input aria-label="Chroma key tolerance" type="range" min={0} max={260} value={object.chromaKeyTolerance ?? 90} onChange={event => updateObject(object.id, { chromaKeyTolerance: Number(event.target.value) })} /></label>
+          <label className="field"><span>Edge Softness {object.chromaKeySoftness ?? 45}</span><input aria-label="Chroma key edge softness" type="range" min={1} max={150} value={object.chromaKeySoftness ?? 45} onChange={event => updateObject(object.id, { chromaKeySoftness: Number(event.target.value) })} /></label>
+        </div>}
       </>}
       <div className="fields">
         {numeric("x", "X")}
@@ -141,10 +151,17 @@ export function PropertiesPanel() {
         </>
       )}
       {object.kind === "text" && (
-        <label className="text-field">
-          <span>Text</span>
-          <textarea value={object.text} onChange={(event) => updateObject(object.id, { text: event.target.value })} />
-        </label>
+        <>
+          <label className="text-field"><span>Text</span><textarea value={object.text} onChange={(event) => updateObject(object.id, { text: event.target.value })} /></label>
+          <div className="section-label">Text Style</div>
+          <div className="fields">
+            <label className="field"><span>Font</span><select aria-label="Font family" value={object.fontFamily ?? "Arial"} onChange={e => updateObject(object.id, { fontFamily: e.target.value })}>{["Arial", "Verdana", "Trebuchet MS", "Georgia", "Impact", "Courier New", "Comic Sans MS", "system-ui"].map(font => <option key={font} value={font}>{font}</option>)}</select></label>
+            <label className="field"><span>Size</span><input aria-label="Font size" type="number" min={8} max={200} step={2} value={object.fontSize ?? 54} onChange={e => updateObject(object.id, { fontSize: Math.max(8, Math.min(200, Number(e.target.value) || 8)) })} /></label>
+            <label className="field"><span>Style</span><select aria-label="Font style" value={object.fontStyle ?? "bold"} onChange={e => updateObject(object.id, { fontStyle: e.target.value as SceneObject["fontStyle"] })}><option value="normal">Regular</option><option value="bold">Bold</option><option value="italic">Italic</option><option value="bold italic">Bold italic</option></select></label>
+            <label className="field"><span>Align</span><select aria-label="Text alignment" value={object.textAlign ?? "center"} onChange={e => updateObject(object.id, { textAlign: e.target.value as SceneObject["textAlign"] })}><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select></label>
+            <label className="field"><span>Color</span><input aria-label="Text color" type="color" value={object.textColor ?? assetById(object.assetId)?.color ?? "#ffffff"} onChange={e => updateObject(object.id, { textColor: e.target.value })} /></label>
+          </div>
+        </>
       )}
       <ShotPanel />
     </aside>

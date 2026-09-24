@@ -5,7 +5,7 @@ import type { AudioClip } from "../types/editor";
 
 const maximumBytes = 25 * 1024 * 1024;
 
-type BuiltInSfx = "pop" | "whoosh" | "bonk" | "scratch";
+export type BuiltInSfx = "pop" | "whoosh" | "bonk" | "scratch";
 
 function wavBlob(samples: Float32Array, sampleRate: number) {
   const buffer = new ArrayBuffer(44 + samples.length * 2);
@@ -28,7 +28,7 @@ function wavBlob(samples: Float32Array, sampleRate: number) {
   return new Blob([buffer], { type: "audio/wav" });
 }
 
-function synthesizeSfx(kind: BuiltInSfx) {
+export function synthesizeSfx(kind: BuiltInSfx) {
   const sampleRate = 44100;
   const durations = { pop: .18, whoosh: .55, bonk: .32, scratch: .48 };
   const length = Math.floor(sampleRate * durations[kind]);

@@ -7,7 +7,7 @@ import { AssetArt } from "./AssetArt";
 import { SceneLighting } from "./SceneLighting";
 import { Atmosphere } from "./Atmosphere";
 import { cameraAt, objectAt } from "../animation";
-import { ScanLine } from "lucide-react";
+import { ScanLine, X } from "lucide-react";
 
 export function EditorCanvas() {
   const wrapRef = useRef<HTMLElement>(null);
@@ -23,6 +23,7 @@ export function EditorCanvas() {
     selectedIds,
     selectObject,
     updateObjectTransform,
+    deleteSelected,
     addAssetToActiveShot,
     stageScale: zoomScale,
     setStageView
@@ -35,9 +36,10 @@ export function EditorCanvas() {
   const tick = (Math.max(0, playhead - shotStart) + (shot.animationOffset ?? 0)) * 1000;
   const camera = cameraAt(shot, tick / 1000);
   const nextShot = project.shots[shotIndex + 1];
+  const transitionKind = shot.transition ?? "cut";
   const fadeLength = Math.min(shot.transitionDuration ?? .5, shot.duration);
   const shotTime = Math.max(0, playhead - shotStart);
-  const transitionProgress = shot.transition === "crossfade" && nextShot
+  const transitionProgress = transitionKind !== "cut" && nextShot
     ? Math.max(0, Math.min(1, (shotTime - (shot.duration - fadeLength)) / fadeLength))
     : 0;
   const incomingTime = (nextShot?.animationOffset ?? 0) + transitionProgress * fadeLength;
@@ -45,6 +47,14 @@ export function EditorCanvas() {
   const incomingBackground = nextShot && [...nextShot.objects].filter(object => object.kind === "background" && !object.hidden && object.transform.opacity > 0).sort((a, b) => b.layer - a.layer)[0];
   const playing = useEditorStore(state => state.playing);
   const background = [...shot.objects].filter(object => object.kind === "background" && !object.hidden && object.transform.opacity > 0).sort((a, b) => b.layer - a.layer)[0];
+  const selectedSource = selectedIds.length === 1 ? shot.objects.find(object => object.id === selectedIds[0]) : undefined;
+  const selectedObject = selectedSource ? objectAt(selectedSource, tick / 1000) : undefined;
+  const selectedVisible = selectedObject && !selectedObject.hidden && (selectedObject.visibleFrom === undefined || tick / 1000 >= selectedObject.visibleFrom) && (selectedObject.visibleUntil === undefined || tick / 1000 < selectedObject.visibleUntil);
+  const incomingOpacity = transitionKind === "crossfade" ? transitionProgress : transitionKind === "dip-black" ? Math.max(0, (transitionProgress - .42) / .58) : 1;
+  const incomingSlideX = transitionKind === "slide" ? project.canvas.width * (1 - transitionProgress) : 0;
+  const incomingZoom = transitionKind === "zoom" ? 1.14 - transitionProgress * .14 : 1;
+  const incomingClipWidth = transitionKind === "wipe" ? project.canvas.width * transitionProgress : project.canvas.width;
+  const blackOpacity = transitionKind === "dip-black" ? (transitionProgress < .5 ? transitionProgress * 2 : (1 - transitionProgress) * 2) : 0;
   const snapToCenter = (node: Konva.Node, object: typeof shot.objects[number]) => {
     const snapDistance = 18;
     const width = object.transform.width * Math.abs(node.scaleX());
@@ -64,6 +74,20 @@ export function EditorCanvas() {
     }),
     [project.canvas.height, project.canvas.width, stageScale, stageSize.height, stageSize.width]
   );
+  const deletePosition = (() => {
+    if (!selectedVisible || playing || !selectedObject) return undefined;
+    const t = selectedObject.transform;
+    const rotation = t.rotation * Math.PI / 180;
+    const cameraRotation = camera.rotation * Math.PI / 180;
+    const direction = t.scaleX * (t.flipX ? -1 : 1);
+    const localX = t.x + Math.cos(rotation) * t.width * direction;
+    const localY = t.y + Math.sin(rotation) * t.width * direction;
+    const relativeX = localX - (project.canvas.width / 2 + camera.x);
+    const relativeY = localY - (project.canvas.height / 2 + camera.y);
+    const screenX = project.canvas.width / 2 + camera.zoom * (relativeX * Math.cos(cameraRotation) - relativeY * Math.sin(cameraRotation));
+    const screenY = project.canvas.height / 2 + camera.zoom * (relativeX * Math.sin(cameraRotation) + relativeY * Math.cos(cameraRotation));
+    return { left: artboard.x + screenX * stageScale - 16, top: artboard.y + screenY * stageScale - 16 };
+  })();
 
   useEffect(() => {
     const element = wrapRef.current;
@@ -95,7 +119,7 @@ export function EditorCanvas() {
       onDragOver={(event) => event.preventDefault()}
       onDrop={(event) => {
         const assetId = event.dataTransfer.getData("asset/id");
-        const asset = assets.find((item) => item.id === assetId);
+        const asset = project.customAssets?.find(item => item.id === assetId) ?? assets.find((item) => item.id === assetId);
         const stage = stageRef.current;
         if (!asset || !stage) return;
         stage.setPointersPositions(event.nativeEvent);
@@ -152,8 +176,8 @@ export function EditorCanvas() {
               if (a.kind !== "background" && b.kind === "background") return 1;
               return a.layer - b.layer;
             }).map((object) => {
-              const asset = assetById(object.assetId);
-              if (!asset || object.hidden) return null;
+              const asset = project.customAssets?.find(candidate => candidate.id === object.assetId) ?? assetById(object.assetId);
+              if (!asset || object.hidden || (object.visibleFrom !== undefined && tick / 1000 < object.visibleFrom) || (object.visibleUntil !== undefined && tick / 1000 >= object.visibleUntil)) return null;
               const t = object.transform;
               return (
                 <Group
@@ -193,7 +217,7 @@ export function EditorCanvas() {
                     });
                   }}
                 >
-                  <AssetArt asset={asset} object={object} tick={tick} />
+                  <AssetArt asset={asset} object={object} tick={tick} preview={!playing && selectedIds.includes(object.id)} />
                 </Group>
               );
             })}
@@ -201,11 +225,12 @@ export function EditorCanvas() {
             <Atmosphere object={background} width={project.canvas.width} height={project.canvas.height} tick={tick} />
             </Group>
             </Group>
-            {nextShot && incomingCamera && transitionProgress > 0 && <Group opacity={transitionProgress} listening={false} clipWidth={project.canvas.width} clipHeight={project.canvas.height}>
+            {nextShot && incomingCamera && transitionProgress > 0 && <Group listening={false} clipWidth={incomingClipWidth} clipHeight={project.canvas.height} x={transitionKind === "wipe" ? 0 : incomingSlideX} opacity={incomingOpacity}>
+              <Group x={project.canvas.width / 2} y={project.canvas.height / 2} offsetX={project.canvas.width / 2} offsetY={project.canvas.height / 2} scaleX={incomingZoom} scaleY={incomingZoom}>
               <Group x={project.canvas.width / 2} y={project.canvas.height / 2} offsetX={project.canvas.width / 2 + incomingCamera.x} offsetY={project.canvas.height / 2 + incomingCamera.y} scaleX={incomingCamera.zoom} scaleY={incomingCamera.zoom} rotation={incomingCamera.rotation}>
                 {[...nextShot.objects].map(item => objectAt(item, incomingTime)).sort((a, b) => a.kind === "background" ? -1 : b.kind === "background" ? 1 : a.layer - b.layer).map(item => {
-                  const asset = assetById(item.assetId);
-                  if (!asset || item.hidden) return null;
+                  const asset = project.customAssets?.find(candidate => candidate.id === item.assetId) ?? assetById(item.assetId);
+                  if (!asset || item.hidden || (item.visibleFrom !== undefined && incomingTime < item.visibleFrom) || (item.visibleUntil !== undefined && incomingTime >= item.visibleUntil)) return null;
                   const transform = item.transform;
                   return <Group key={`incoming-${item.id}`} x={transform.x} y={transform.y} width={transform.width} height={transform.height} scaleX={transform.scaleX * (transform.flipX ? -1 : 1)} scaleY={transform.scaleY * (transform.flipY ? -1 : 1)} rotation={transform.rotation} opacity={transform.opacity}>
                     <AssetArt asset={asset} object={item} tick={incomingTime * 1000} />
@@ -214,7 +239,9 @@ export function EditorCanvas() {
                 <SceneLighting object={incomingBackground} width={project.canvas.width} height={project.canvas.height} />
                 <Atmosphere object={incomingBackground} width={project.canvas.width} height={project.canvas.height} tick={incomingTime * 1000} />
               </Group>
+              </Group>
             </Group>}
+            {blackOpacity > 0 && <Rect width={project.canvas.width} height={project.canvas.height} fill="#050505" opacity={blackOpacity} listening={false} />}
             <Transformer
               ref={transformerRef}
               rotateEnabled
@@ -224,6 +251,7 @@ export function EditorCanvas() {
           </Group>
         </Layer>
       </Stage>
+      {deletePosition && selectedObject && <button className="canvas-delete-button" style={deletePosition} aria-label={`Delete ${selectedObject.name}`} title={`Delete ${selectedObject.name}`} onPointerDown={event => event.stopPropagation()} onClick={event => { event.stopPropagation(); deleteSelected(); }}><X size={17} /></button>}
     </main>
   );
 }

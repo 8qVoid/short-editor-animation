@@ -187,6 +187,37 @@ button {
   box-shadow: inset 0 0 0 2px #151719;
 }
 
+.import-background-row { display: grid; gap: 6px; margin: 0 0 10px; }
+.import-background-row button,
+.sound-shelf-heading button {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: #29343a;
+  background: #fffdf7;
+  border: 1px solid #d0c8bc;
+  border-radius: 7px;
+}
+.sound-fx-shelf { display: grid; gap: 8px; }
+.sound-shelf-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; font-weight: 800; }
+.sound-shelf-heading button { padding: 0 10px; font-size: 12px; }
+.sound-asset-list { display: grid; gap: 7px; }
+.sound-asset { min-width: 0; min-height: 48px; display: grid; grid-template-columns: 30px 18px minmax(0,1fr) 30px 30px; align-items: center; gap: 6px; padding: 5px; background: #fffdf7; border: 1px solid #d0c8bc; border-radius: 7px; }
+.sound-asset > span { min-width: 0; display: grid; gap: 2px; }
+.sound-asset strong,.sound-asset small { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.sound-asset strong { font-size: 12px; }
+.sound-asset small { color: #687078; font-size: 10px; }
+.sound-asset > button { width: 28px; height: 28px; display: grid; place-items: center; padding: 0; color: #29343a; background: #f4f0e7; border: 1px solid #d0c8bc; border-radius: 5px; }
+.sound-shelf-hint { color: #687078; font-size: 11px; }
+.caption-maker { display: grid; gap: 8px; margin-bottom: 10px; }
+.caption-maker textarea { width: 100%; min-height: 90px; resize: vertical; padding: 9px; color: #243039; background: #fffdf7; border: 1px solid #d0c8bc; border-radius: 6px; font: inherit; font-size: 12px; }
+.caption-maker > button { min-height: 36px; color: #fff; background: #20262c; border: 1px solid #20262c; border-radius: 6px; }
+.caption-maker small,.caption-maker [role=status] { color: #687078; font-size: 11px; line-height: 1.4; }
+.chroma-toggle { display: flex; align-items: center; gap: 8px; margin: 4px 0 10px; font-size: 12px; }
+.chroma-toggle input { width: 16px; height: 16px; accent-color: #087c78; }
+
 .asset-grid {
   display: grid;
   grid-template-columns: minmax(0,1fr) minmax(0,1fr);
@@ -235,6 +266,22 @@ button {
   border-radius: 5px;
 }
 .asset-favorite.active { color: #ad7028; }
+.asset-remove {
+  position: absolute;
+  right: 32px;
+  bottom: 3px;
+  z-index: 1;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #766b5e;
+  background: #fffdf7;
+  border: 1px solid #d0c8bc;
+  border-radius: 5px;
+}
+.asset-remove:disabled { opacity: .35; cursor: not-allowed; }
 
 .asset-thumb {
   border: 2px solid #1f2328;
@@ -284,6 +331,8 @@ button {
   border-radius: 7px;
   box-shadow: 0 2px 8px rgba(0,0,0,.18);
 }
+.canvas-delete-button { position: absolute; z-index: 6; width: 32px; height: 32px; display: grid; place-items: center; padding: 0; color: #fff; background: #cf4944; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 1px 5px #0008; cursor: pointer; }
+.canvas-delete-button:hover { background: #a92e2a; }
 .canvas-guide-toggle.active { color: #fff; background: #147b72; border-color: #147b72; }
 
 .object-name {
@@ -397,6 +446,8 @@ button {
 .audio-clip-controls input[type=range] { width: 90px; }
 .audio-timeline-clip { position: absolute; height: 27px; border-radius: 3px; padding: 3px 7px; border: 1px solid #9a677e; background: #edcedc; font-size: 11px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: block; text-align: left; }
 .timeline .audio-timeline-clip { min-height: 27px; display: block; }
+.audio-timeline-clip { cursor: grab; touch-action: none; }
+.audio-timeline-clip.dragging { cursor: grabbing; z-index: 7; box-shadow: 0 3px 10px rgba(0,0,0,.24); }
 .field select { width: 100%; min-width: 0; padding: 8px 5px; border: 1px solid #d0c8bc; border-radius: 5px; background: white; color: #1f2328; }
 .field input[type=color] { padding: 3px; height: 34px; width: 100%; cursor: pointer; }
 .timeline-track { position: relative; height: 102px; margin: 0 12px; }
@@ -405,8 +456,26 @@ button {
 .timeline-clip { position: absolute; top: 38px; height: 60px; min-width: 3px; border: 1px solid #64958f; border-radius: 4px; background: #c5e1da; overflow: hidden; }
 .timeline-clip.selected { border: 2px solid #167b70; }
 .clip-transition { position: absolute; z-index: 2; right: 0; top: 0; bottom: 0; pointer-events: none; background: linear-gradient(90deg, rgba(89,165,153,0), rgba(43,128,117,.62)); border-left: 1px dashed #287d73; }
+.clip-transition.transition-wipe { background: repeating-linear-gradient(45deg, rgba(43,128,117,.12), rgba(43,128,117,.12) 8px, rgba(43,128,117,.52) 8px, rgba(43,128,117,.52) 16px); }
+.clip-transition.transition-slide { background: linear-gradient(90deg, rgba(83,111,156,0), rgba(69,91,146,.68)); }
+.clip-transition.transition-zoom { background: radial-gradient(circle at 100% 50%, rgba(43,128,117,.7), rgba(43,128,117,.2) 52%, transparent 54%); }
+.clip-transition.transition-dip-black { background: linear-gradient(90deg, transparent, rgba(16,18,20,.82)); border-left-color: #151719; }
 .timeline .clip-body { border: 0; border-radius: 0; background: transparent; width: 100%; height: 100%; padding: 8px 14px 8px 7px; display: flex; align-items: flex-start; justify-content: center; flex-direction: column; gap: 4px; overflow: hidden; }
+.timeline .clip-body { cursor: ew-resize; touch-action: none; user-select: none; }
+.timeline .clip-body.scrubbing { background: rgba(255,255,255,.18); }
 .clip-body strong, .clip-body small { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 11px; }
+.timeline .clip-quick { position: absolute; z-index: 4; top: 4px; width: 22px; height: 22px; min-height: 22px; display: grid; place-items: center; padding: 0; color: #203137; background: rgba(255,253,247,.92); border: 1px solid #8fb7b0; border-radius: 5px; opacity: 0; }
+.timeline-clip:hover .clip-quick,
+.timeline-clip.selected .clip-quick,
+.timeline .clip-quick:focus-visible { opacity: 1; }
+.clip-duplicate { right: 32px; }
+.clip-delete { right: 8px; }
+.timeline .clip-delete { color: #a33b37; }
+.transition-picker { position: absolute; z-index: 5; bottom: 4px; min-width: 76px; height: 24px; display: grid; grid-template-columns: 22px 1fr; align-items: center; color: #34605b; background: rgba(255,253,247,.94); border: 1px solid #8fb7b0; border-radius: 999px; font-size: 10px; font-weight: 900; box-shadow: 0 1px 4px rgba(0,0,0,.12); overflow: hidden; }
+.transition-picker.active { color: #fff; background: #287d73; border-color: #287d73; }
+.transition-picker span { text-align: center; pointer-events: none; }
+.transition-picker select { width: 52px; min-width: 0; height: 22px; padding: 0 2px; color: inherit; background: transparent; border: 0; font-size: 10px; font-weight: 800; outline: 0; cursor: pointer; }
+.transition-picker option { color: #1f2328; background: #fffdf7; }
 .clip-trim { position: absolute; right: 0; top: 0; bottom: 0; width: 9px; cursor: ew-resize; background: #448b80; touch-action: none; }
 .playhead { position: absolute; top: 0; bottom: 0; width: 2px; background: #d84b52; pointer-events: none; }
 .playhead::before { content: ""; position: absolute; left: -4px; width: 10px; height: 10px; background: #d84b52; clip-path: polygon(0 0, 100% 0, 100% 55%, 50% 100%, 0 55%); }
@@ -484,6 +553,8 @@ button:disabled { cursor: default; opacity: .4; }
 .object-track.selected { background: #d2e9e4; }
 .track-label { display: flex; align-items: center; gap: 2px; min-width: 0; padding-right: 8px; }
 .timeline .track-label button { min-height: 25px; padding: 3px; border: 0; border-radius: 2px; background: transparent; flex-shrink: 0; }
+.timeline .track-label .track-delete { color: #a33b37; }
+.timeline .track-label .track-delete:hover { color: #fff; background: #b5423c; }
 .timeline .track-label .track-name { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-align: left; flex: 1; min-width: 0; font-size: 11px; }
 .key-track { position: relative; margin: 0 12px; min-height: 30px; background: repeating-linear-gradient(90deg, transparent,transparent calc(25% - 1px),#c4cecf calc(25% - 1px),#c4cecf 25%); cursor: crosshair; }
 .timeline .key-marker { position: absolute; top: 4px; transform: translateX(-50%); min-height: 22px; height: 22px; width: 22px; padding: 3px; border: 0; border-radius: 0; background: transparent; color: #157b74; cursor: ew-resize; touch-action: none; }

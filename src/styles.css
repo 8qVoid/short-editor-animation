@@ -760,28 +760,102 @@ button:disabled { cursor: default; opacity: .4; }
     max-height: 170px;
   }
   .timeline {
-    padding: 8px;
+    padding: 10px 8px 12px;
   }
   .timeline-actions {
     gap: 6px;
-    margin-bottom: 7px;
+    margin-bottom: 9px;
     scrollbar-width: none;
+  }
+  .timeline-actions button,
+  .timeline-actions label {
+    min-height: 42px;
+    border-radius: 8px;
+  }
+  .timeline-actions .primary {
+    min-width: 48px;
   }
   .timecode {
     min-width: 126px;
     font-size: 11px;
   }
   .timeline-scroll {
-    height: 104px;
+    height: 142px;
     max-width: 100%;
-    overflow: auto;
+    overflow: auto hidden;
     overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    touch-action: pan-x;
   }
   .timeline:has(.audio-timeline-clip) .timeline-scroll {
-    height: 130px;
+    height: 176px;
   }
   .timeline-track {
-    min-width: 520px;
+    min-width: 680px;
+    margin: 0 18px;
+  }
+  .time-ruler {
+    height: 34px;
+  }
+  .time-ruler span {
+    height: 24px;
+    font-size: 11px;
+  }
+  .timeline-clip {
+    top: 44px;
+    height: 76px;
+    border-radius: 8px;
+  }
+  .timeline .clip-body {
+    padding: 11px 42px 12px 10px;
+    touch-action: pan-x;
+  }
+  .clip-body strong {
+    font-size: 12px;
+  }
+  .clip-body small {
+    font-size: 11px;
+  }
+  .timeline .clip-quick {
+    top: 6px;
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+    border-radius: 8px;
+    opacity: 1;
+  }
+  .clip-duplicate {
+    right: 44px;
+  }
+  .clip-delete {
+    right: 8px;
+  }
+  .transition-picker {
+    bottom: 7px;
+    min-width: 96px;
+    height: 32px;
+    grid-template-columns: 30px 1fr;
+    border-radius: 8px;
+    font-size: 11px;
+  }
+  .transition-picker select {
+    width: 64px;
+    height: 30px;
+    font-size: 11px;
+  }
+  .clip-trim {
+    width: 16px;
+  }
+  .audio-timeline-clip {
+    height: 34px;
+    border-radius: 8px;
+    padding: 7px 9px;
+    font-size: 12px;
+    touch-action: pan-x;
+  }
+  .timeline .audio-timeline-clip {
+    min-height: 34px;
   }
   .key-track {
     min-width: 260px;

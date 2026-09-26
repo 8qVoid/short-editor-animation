@@ -19,9 +19,11 @@ export function Timeline() {
   const { project, playhead, playing, seek, setPlaying, splitShot, moveShot, setActiveShot, addShot, duplicateShot, deleteShot, setShotDuration, setShotTransition, updateAudio, addStoryBeat } = useEditorStore();
   const [zoom, setZoom] = useState(100);
   const trackRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [trim, setTrim] = useState<{ id: string; x: number; duration: number; next: number } | null>(null);
-  const [audioDrag, setAudioDrag] = useState<{ id: string; x: number; start: number; next: number; moved: boolean } | null>(null);
-  const [clipScrub, setClipScrub] = useState<{ id: string; x: number; moved: boolean } | null>(null);
+  const [audioDrag, setAudioDrag] = useState<{ id: string; x: number; lastX: number; start: number; next: number; moved: boolean; mode: "move" | "pan" } | null>(null);
+  const [clipScrub, setClipScrub] = useState<{ id: string; x: number; lastX: number; moved: boolean; mode: "scrub" | "pan" } | null>(null);
+  const [mobileTimeline, setMobileTimeline] = useState(false);
   const active = project.shots.find(s => s.id === project.activeShotId)!;
   let cursor = 0;
   const clips = project.shots.map(shot => { const start = cursor; cursor += shot.duration; return { shot, start }; });
@@ -30,6 +32,8 @@ export function Timeline() {
   const start = clips.find(c => c.shot.id === active.id)!.start;
   const cutFrame = Math.round((playhead - start) * fps);
   const canSplit = cutFrame > 0 && cutFrame < Math.round(active.duration * fps);
+  const audioTop = mobileTimeline ? 128 : 104;
+  const audioLaneHeight = mobileTimeline ? 40 : 32;
   const timecode = (time: number) => {
     const frames = Math.round(time * fps);
     return `${Math.floor(frames / fps / 60).toString().padStart(2, "0")}:${(Math.floor(frames / fps) % 60).toString().padStart(2, "0")}:${(frames % fps).toString().padStart(2, "0")}`;
@@ -50,11 +54,25 @@ export function Timeline() {
     request = requestAnimationFrame(advance);
     return () => cancelAnimationFrame(request);
   }, [playing]);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 600px), (max-height: 480px)");
+    const update = () => setMobileTimeline(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
   const toggle = () => { if (!playing && playhead >= total) seek(0); setPlaying(!playing); };
   const scrub = (clientX: number) => {
     const rect = trackRef.current!.getBoundingClientRect();
     setPlaying(false);
     seek(Math.round((clientX - rect.left) / zoom * fps) / fps);
+  };
+  const panTimeline = (clientX: number, lastX: number) => {
+    const scroll = scrollRef.current;
+    if (!scroll) return;
+    scroll.scrollLeft += lastX - clientX;
+    const next = Math.round((scroll.scrollLeft / zoom) * fps) / fps;
+    seek(next);
   };
   return <footer className="timeline">
     <div className="timeline-actions">
@@ -75,8 +93,8 @@ export function Timeline() {
       <button title="Zoom timeline out" aria-label="Zoom timeline out" onClick={() => setZoom(z => Math.max(30, z / 1.5))}><ZoomOut size={16} /></button>
       <button title="Zoom timeline in" aria-label="Zoom timeline in" onClick={() => setZoom(z => Math.min(600, z * 1.5))}><ZoomIn size={16} /></button>
     </div>
-    <div className="timeline-scroll">
-      <div ref={trackRef} className="timeline-track" style={{ width: Math.max(total * zoom + 80, 800), height: 104 + (project.audioClips?.length ?? 0) * 32 }}>
+    <div ref={scrollRef} className="timeline-scroll">
+      <div ref={trackRef} className="timeline-track" style={{ width: Math.max(total * zoom + 80, 800), height: audioTop + (project.audioClips?.length ?? 0) * audioLaneHeight }}>
         <div className="time-ruler" role="slider" tabIndex={0} aria-label="Timeline playhead" aria-valuemin={0} aria-valuemax={total} aria-valuenow={playhead}
           onKeyDown={e => { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); setPlaying(false); seek(playhead + (e.key === "ArrowRight" ? 1 : -1) / fps); } }}
           onPointerDown={e => { e.currentTarget.setPointerCapture(e.pointerId); scrub(e.clientX); }}
@@ -86,12 +104,16 @@ export function Timeline() {
         </div>
         {clips.map(({ shot, start: clipStart }, index) => <div key={shot.id} className={`timeline-clip ${shot.id === active.id ? "selected" : ""}`} style={{ left: clipStart * zoom, width: (trim?.id === shot.id ? trim.next : shot.duration) * zoom }}>
           <button className={`clip-body ${clipScrub?.id === shot.id ? "scrubbing" : ""}`} title={`${shot.name}: ${shot.duration.toFixed(2)} seconds. Drag to scrub.`} onDragOver={e => e.preventDefault()} onDrop={e => { e.preventDefault(); moveShot(e.dataTransfer.getData("shot/id"), shot.id); }}
-            onPointerDown={event => { event.currentTarget.setPointerCapture(event.pointerId); setClipScrub({ id: shot.id, x: event.clientX, moved: false }); }}
+            onPointerDown={event => {
+              event.currentTarget.setPointerCapture(event.pointerId);
+              setClipScrub({ id: shot.id, x: event.clientX, lastX: event.clientX, moved: false, mode: event.pointerType === "touch" ? "pan" : "scrub" });
+            }}
             onPointerMove={event => {
               if (clipScrub?.id !== shot.id) return;
               const moved = clipScrub.moved || Math.abs(event.clientX - clipScrub.x) > 3;
-              setClipScrub({ ...clipScrub, moved });
-              if (moved) scrub(event.clientX);
+              if (clipScrub.mode === "pan" && moved) panTimeline(event.clientX, clipScrub.lastX);
+              else if (moved) scrub(event.clientX);
+              setClipScrub({ ...clipScrub, lastX: event.clientX, moved });
             }}
             onPointerUp={event => {
               if (clipScrub?.id === shot.id && !clipScrub.moved) setActiveShot(shot.id);
@@ -117,20 +139,26 @@ export function Timeline() {
         </div>)}
         {(project.audioClips ?? []).map((clip, index) => {
           const dragStart = audioDrag?.id === clip.id ? audioDrag.next : clip.start;
-          return <button key={clip.id} className={`audio-timeline-clip ${audioDrag?.id === clip.id ? "dragging" : ""}`} title={`${clip.name}: ${clip.duration.toFixed(2)}s. Drag to move.`} style={{ left: dragStart * zoom, top: 104 + index * 32, width: Math.max(4, clip.duration * zoom), opacity: clip.muted ? .4 : 1 }}
+          return <button key={clip.id} className={`audio-timeline-clip ${audioDrag?.id === clip.id ? "dragging" : ""}`} title={`${clip.name}: ${clip.duration.toFixed(2)}s. Drag to move.`} style={{ left: dragStart * zoom, top: audioTop + index * audioLaneHeight, width: Math.max(4, clip.duration * zoom), opacity: clip.muted ? .4 : 1 }}
             onPointerDown={event => {
               event.currentTarget.setPointerCapture(event.pointerId);
               setPlaying(false);
-              setAudioDrag({ id: clip.id, x: event.clientX, start: clip.start, next: clip.start, moved: false });
+              setAudioDrag({ id: clip.id, x: event.clientX, lastX: event.clientX, start: clip.start, next: clip.start, moved: false, mode: event.pointerType === "touch" ? "pan" : "move" });
             }}
             onPointerMove={event => {
               if (audioDrag?.id !== clip.id) return;
+              if (audioDrag.mode === "pan") {
+                const moved = audioDrag.moved || Math.abs(event.clientX - audioDrag.x) > 3;
+                if (moved) panTimeline(event.clientX, audioDrag.lastX);
+                setAudioDrag({ ...audioDrag, lastX: event.clientX, moved });
+                return;
+              }
               const next = Math.max(0, Math.round((audioDrag.start + (event.clientX - audioDrag.x) / zoom) * fps) / fps);
               setAudioDrag({ ...audioDrag, next, moved: audioDrag.moved || Math.abs(event.clientX - audioDrag.x) > 3 });
             }}
             onPointerUp={event => {
               if (audioDrag?.id === clip.id) {
-                if (audioDrag.moved) updateAudio(clip.id, { start: audioDrag.next });
+                if (audioDrag.moved && audioDrag.mode === "move") updateAudio(clip.id, { start: audioDrag.next });
                 else seek(clip.start);
               }
               setAudioDrag(null);

@@ -14,6 +14,10 @@ export default function App() {
   const [restored, setRestored] = useState(false);
   const [mobilePanel, setMobilePanel] = useState<"assets" | "properties" | "timeline">("assets");
   const [sheetHeight, setSheetHeight] = useState(38);
+  const chooseMobilePanel = (panel: "assets" | "properties" | "timeline") => {
+    setMobilePanel(panel);
+    setSheetHeight(panel === "timeline" ? 48 : 38);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -108,9 +112,9 @@ export default function App() {
         <ChevronsDownUp size={15} />
       </button>
       <nav className="mobile-dock" aria-label="Mobile editor panels">
-        <button className={mobilePanel === "assets" ? "active" : ""} onClick={() => setMobilePanel("assets")}><Box size={18} /> Assets</button>
-        <button className={mobilePanel === "properties" ? "active" : ""} onClick={() => setMobilePanel("properties")}><SlidersHorizontal size={18} /> Edit</button>
-        <button className={mobilePanel === "timeline" ? "active" : ""} onClick={() => setMobilePanel("timeline")}><Clapperboard size={18} /> Timeline</button>
+        <button className={mobilePanel === "assets" ? "active" : ""} onClick={() => chooseMobilePanel("assets")}><Box size={18} /> Assets</button>
+        <button className={mobilePanel === "properties" ? "active" : ""} onClick={() => chooseMobilePanel("properties")}><SlidersHorizontal size={18} /> Edit</button>
+        <button className={mobilePanel === "timeline" ? "active" : ""} onClick={() => chooseMobilePanel("timeline")}><Clapperboard size={18} /> Timeline</button>
       </nav>
     </div>
   );

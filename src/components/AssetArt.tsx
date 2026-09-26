@@ -65,6 +65,7 @@ function MediaAssetArt({ asset, object, tick = 0 }: ArtProps) {
   const [media, setMedia] = useState<CanvasImageSource & { width: number; height: number }>();
   useEffect(() => {
     if (!asset.mediaSrc) return;
+    if (object.id === "preview" && asset.mediaType === "video") return;
     let active = true;
     if (asset.mediaType === "video") {
       const video = document.createElement("video");
@@ -89,6 +90,13 @@ function MediaAssetArt({ asset, object, tick = 0 }: ArtProps) {
   }, [asset.mediaSrc, asset.mediaType]);
   const w = object.transform.width;
   const h = object.transform.height;
+  if (object.id === "preview" && asset.mediaType === "video") {
+    return <Group>
+      <Rect width={w} height={h} fill={asset.color ?? "#d9c7a6"} cornerRadius={10} listening={false} />
+      <Text text="VIDEO" x={0} y={h * .34} width={w} align="center" fontSize={Math.max(12, Math.min(34, w * .16))} fontStyle="bold" fill="#ffffff" stroke="#1f2328" strokeWidth={4} listening={false} />
+      <Text text={asset.name} x={w * .08} y={h * .58} width={w * .84} height={h * .26} align="center" verticalAlign="middle" fontSize={Math.max(9, Math.min(16, w * .055))} fill="#1f2328" ellipsis listening={false} />
+    </Group>;
+  }
   const sourceWidth = media instanceof HTMLVideoElement ? media.videoWidth : media?.width ?? 0;
   const sourceHeight = media instanceof HTMLVideoElement ? media.videoHeight : media?.height ?? 0;
   const ratio = w / h;

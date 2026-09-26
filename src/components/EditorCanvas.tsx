@@ -217,6 +217,7 @@ export function EditorCanvas() {
                     });
                   }}
                 >
+                  <Rect width={t.width} height={t.height} fill="#000" opacity={0.001} />
                   <AssetArt asset={asset} object={object} tick={tick} preview={!playing && selectedIds.includes(object.id)} />
                 </Group>
               );

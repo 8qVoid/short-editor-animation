@@ -1,4 +1,5 @@
 import type { ActionId, Asset, CharacterViewId, ClosetItemId, ExpressionId, MouthId, PoseId } from "../types/editor";
+import { catMemeAssets } from "./catMemes";
 
 export const assets: Asset[] = [
   { id: "bg-time-card", name: "Time Card", category: "Backgrounds", kind: "background", tags: ["title", "later", "time", "card"], color: "#244f50", thumbnail: "time-card" },
@@ -64,7 +65,8 @@ export const assets: Asset[] = [
   { id: "effect-speed-lines", name: "Speed Lines", category: "Effects", kind: "effect", tags: ["speed", "motion", "action", "running"], color: "#f7f1df", accent: "#1f2328", thumbnail: "speed-lines" },
   { id: "effect-dust", name: "Dust Motes", category: "Effects", kind: "effect", tags: ["dust", "subtle", "air", "room"], color: "#eadfbf", accent: "#ffffff", thumbnail: "dust" },
   { id: "effect-question", name: "Question Marks", category: "Effects", kind: "effect", tags: ["confused", "thinking", "question"], color: "#74a9c9", accent: "#1f2328", thumbnail: "question" },
-  { id: "text-caption", name: "Shorts Caption", category: "Text", kind: "text", tags: ["text", "subtitle", "caption"], color: "#ffffff", accent: "#111111", thumbnail: "text" }
+  { id: "text-caption", name: "Shorts Caption", category: "Text", kind: "text", tags: ["text", "subtitle", "caption"], color: "#ffffff", accent: "#111111", thumbnail: "text" },
+  ...catMemeAssets
 ];
 
 export const expressions: Array<{ id: ExpressionId; name: string }> = [

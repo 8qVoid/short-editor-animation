@@ -4,6 +4,7 @@ import { Group, Layer, Stage } from "react-konva";
 import { AssetArt } from "./AssetArt";
 import { SceneLighting } from "./SceneLighting";
 import { assets } from "../data/assets";
+import { providedSounds } from "../data/soundFx";
 import { useEditorStore } from "../store/editorStore";
 import { readClip, synthesizeSfx, type BuiltInSfx } from "./AudioEditor";
 import type { Asset, AssetCategory, CaptionCue, SceneObject, SoundAsset } from "../types/editor";
@@ -24,7 +25,7 @@ const BackgroundPreview = memo(function BackgroundPreview({ asset }: { asset: As
   return <div ref={ref} style={{ pointerEvents: "none",width:'100%',minWidth:0 }} aria-hidden="true"><Stage width={size} height={76}><Layer listening={false}><Group x={large?(size-previewWidth*scale)/2:(size-43)/2} y={large?(76-previewHeight*scale)/2:0} scaleX={scale} scaleY={scale}><AssetArt asset={asset} object={large?{...object,transform:{...object.transform,width:previewWidth,height:previewHeight}}:object} />{asset.kind==='background'&&<SceneLighting object={object} width={43} height={76}/>}</Group></Layer></Stage></div>;
 });
 
-const categories: AssetCategory[] = ["Characters", "Backgrounds", "Props", "Shapes", "Effects", "Sound FX", "Text"];
+const categories: AssetCategory[] = ["Characters", "Catmemes", "Backgrounds", "Props", "Shapes", "Effects", "Sound FX", "Text"];
 
 const builtInSounds: Array<{ id: BuiltInSfx; name: string; description: string }> = [
   { id: "pop", name: "Pop", description: "Quick bright accent" },
@@ -32,14 +33,6 @@ const builtInSounds: Array<{ id: BuiltInSfx; name: string; description: string }
   { id: "bonk", name: "Bonk", description: "Soft comedic hit" },
   { id: "scratch", name: "Record Scratch", description: "Sudden stop" }
 ];
-
-const providedSounds = [
-  "ambient-kitchen-loop.mp3", "bass-impact.mp3", "bonk.mp3", "buzzer-or-wrong-answer-.mp3",
-  "Comedy - Comedy Music.mp3", "Comedy Quirky Sneaky Music.mp3", "cricket-sound.mp3",
-  "dialing-numbers-7025.mp3", "electric-sparks.mp3", "microwave-ding.mp3", "pop.mp3",
-  "Quirky Music.mp3", "record_scratch.mp3", "Simple Whoosh.mp3",
-  "Sound Effect TwinkleSparkle.mp3", "vine boom.mp3"
-].map(name => ({ name, source: `/sound-fx/${encodeURIComponent(name)}` }));
 
 function parseSubtitleTime(value: string) {
   const timestamp = value.trim().match(/^(?:(\d+):)?(\d{2}):(\d{2})[,.](\d{3})$/);

@@ -61,6 +61,48 @@ function UploadedImageArt({ asset, object }: ArtProps) {
     : <Rect width={object.transform.width} height={object.transform.height} fill={asset.color ?? "#c4d0d3"} listening={false} />;
 }
 
+function MediaAssetArt({ asset, object, tick = 0 }: ArtProps) {
+  const [media, setMedia] = useState<CanvasImageSource & { width: number; height: number }>();
+  useEffect(() => {
+    if (!asset.mediaSrc) return;
+    let active = true;
+    if (asset.mediaType === "video") {
+      const video = document.createElement("video");
+      video.crossOrigin = "anonymous";
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.preload = "auto";
+      video.onloadeddata = () => {
+        if (!active) return;
+        setMedia(video as unknown as HTMLVideoElement & { width: number; height: number });
+        void video.play().catch(() => undefined);
+      };
+      video.src = asset.mediaSrc;
+      return () => { active = false; video.pause(); video.removeAttribute("src"); video.load(); };
+    }
+    const image = new window.Image();
+    image.onload = () => { if (active) setMedia(image); };
+    image.onerror = () => { if (active) setMedia(undefined); };
+    image.src = asset.mediaSrc;
+    return () => { active = false; image.onload = null; image.onerror = null; };
+  }, [asset.mediaSrc, asset.mediaType]);
+  const w = object.transform.width;
+  const h = object.transform.height;
+  const sourceWidth = media instanceof HTMLVideoElement ? media.videoWidth : media?.width ?? 0;
+  const sourceHeight = media instanceof HTMLVideoElement ? media.videoHeight : media?.height ?? 0;
+  const ratio = w / h;
+  const sourceRatio = sourceWidth && sourceHeight ? sourceWidth / sourceHeight : ratio;
+  const crop = media && sourceRatio > ratio
+    ? { x: (sourceWidth - sourceHeight * ratio) / 2, y: 0, width: sourceHeight * ratio, height: sourceHeight }
+    : media ? { x: 0, y: (sourceHeight - sourceWidth / ratio) / 2, width: sourceWidth, height: sourceWidth / ratio } : undefined;
+  return <Group>
+    <Rect width={w} height={h} fill={asset.color ?? "#d9c7a6"} cornerRadius={10} listening={false} />
+    {media && <KonvaImage image={media} crop={crop} width={w} height={h} listening={false} />}
+    {asset.mediaType === "video" && <Text text="VIDEO" x={8} y={8 + Math.sin(tick * .004) * 1.5} fontSize={Math.max(12, Math.min(26, w * .08))} fontStyle="bold" fill="#ffffff" stroke="#1f2328" strokeWidth={3} listening={false} />}
+  </Group>;
+}
+
 
 function Closet({ items = [], accent, view = "front", headX = 0, eyeX = 0 }: { items?: string[]; accent: string; view?: string; headX?: number; eyeX?: number }) {
   const has = (id: string) => items.includes(id);
@@ -228,6 +270,7 @@ function PropArt({ asset, object, tick = 0 }: ArtProps) {
 
 export function AssetArt(props: ArtProps) {
   if (props.asset.imageData) return <UploadedImageArt {...props} />;
+  if (props.asset.mediaSrc) return <MediaAssetArt {...props} />;
   if (props.asset.id === "bg-time-card") return <Group><Rect width={props.object.transform.width} height={props.object.transform.height} fill="#244f50"/>{Array.from({length:8},(_,i)=><Line key={i} points={[0,props.object.transform.height*i/7,props.object.transform.width,props.object.transform.height*(i+.5)/7]} stroke="#8dc2ae" strokeWidth={3} opacity={.16}/>)}</Group>;
   if (props.asset.kind === "character") return <CharacterArt {...props} />;
   if (props.asset.kind === "background") return <BackgroundArt {...props} />;

@@ -1,5 +1,6 @@
 export type AssetCategory =
   | "Characters"
+  | "Catmemes"
   | "Backgrounds"
   | "Props"
   | "Shapes"
@@ -29,6 +30,8 @@ export interface Asset {
   imageData?: string;
   imageWidth?: number;
   imageHeight?: number;
+  mediaSrc?: string;
+  mediaType?: "image" | "video";
 }
 
 export interface Transform {

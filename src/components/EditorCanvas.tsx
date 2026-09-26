@@ -55,6 +55,11 @@ export function EditorCanvas() {
   const incomingZoom = transitionKind === "zoom" ? 1.14 - transitionProgress * .14 : 1;
   const incomingClipWidth = transitionKind === "wipe" ? project.canvas.width * transitionProgress : project.canvas.width;
   const blackOpacity = transitionKind === "dip-black" ? (transitionProgress < .5 ? transitionProgress * 2 : (1 - transitionProgress) * 2) : 0;
+  const selectCanvasObject = (event: Konva.KonvaEventObject<MouseEvent | TouchEvent | PointerEvent>, id: string) => {
+    event.cancelBubble = true;
+    const source = event.evt as MouseEvent | PointerEvent;
+    selectObject(id, "shiftKey" in source && source.shiftKey);
+  };
   const snapToCenter = (node: Konva.Node, object: typeof shot.objects[number]) => {
     const snapDistance = 18;
     const width = object.transform.width * Math.abs(node.scaleX());
@@ -192,14 +197,10 @@ export function EditorCanvas() {
                   rotation={t.rotation}
                   opacity={t.opacity}
                   draggable={!object.locked && !playing}
-                  onClick={(event) => {
-                    event.cancelBubble = true;
-                    selectObject(object.id, event.evt.shiftKey);
-                  }}
-                  onTap={(event) => {
-                    event.cancelBubble = true;
-                    selectObject(object.id);
-                  }}
+                  onMouseDown={(event) => selectCanvasObject(event, object.id)}
+                  onTouchStart={(event) => selectCanvasObject(event, object.id)}
+                  onClick={(event) => selectCanvasObject(event, object.id)}
+                  onTap={(event) => selectCanvasObject(event, object.id)}
                   onDragMove={(event) => snapToCenter(event.target, object)}
                   onDragEnd={(event) => {
                     snapToCenter(event.target, object);
@@ -217,7 +218,7 @@ export function EditorCanvas() {
                     });
                   }}
                 >
-                  <Rect width={t.width} height={t.height} fill="#000" opacity={0.001} />
+                  <Rect width={t.width} height={t.height} fill="#fff" opacity={0.01} perfectDrawEnabled={false} />
                   <AssetArt asset={asset} object={object} tick={tick} preview={!playing && selectedIds.includes(object.id)} />
                 </Group>
               );
